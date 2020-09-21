@@ -1,0 +1,56 @@
+\documentclass{article}
+
+\usepackage{tabularx}
+\usepackage{booktabs}
+
+\title{CAS 741: Problem Statement - \\PID Controller}
+
+\author{Naveen Ganesh Muralidharan . muralidn}
+
+\date{21-September-2020}
+
+\begin{document}
+
+\maketitle
+
+\begin{table}[hp]
+\caption{Revision History} \label{TblRevisionHistory}
+\begin{tabularx}{\textwidth}{llX}
+\toprule
+\textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
+\midrule
+21-Sep-2020 & Naveen Ganesh Muralidharan & First revision of the PID problem statement\\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section*{Problem Statement}
+
+A Closed Loop control system can be defined as the system where the input to the Power Plant is continuously 
+adjusted by monitoring the feedback from the Power Plant until the expected Set-Point is reached. The 
+Closed Loop control is used in a variety of applications such as cruise control of an automobile, temperature 
+control in a thermostat, and many more. The heart of the control loop is the Proportional, Integral, Derivative 
+(PID) controller which drives the input to the Power Plant in the loop. However, the PID controller in a loop must 
+be tuned before it is deemed ready for use. This involves setting optimal values for the respective Proportional, 
+Integral and Derivative gain constants. Therefore, a model is necessary to simulate the inputs and outputs of a 
+control loop with which the PID gains can be tuned.
+
+The inputs to the model are the Set-Point(numeric),  Proportional Gain(numeric), Integral Gain(numeric), Derivative
+Gain(numeric), total simulation time (numeric) and step time(numeric). The outputs from the model are the Measured Values
+from the Power Plant(numeric list) and time-points (numeric list).
+
+\section*{Stakeholders}
+Primary stakeholders of this project are,
+\begin{itemize}
+\item Naveen Ganesh Muralidharan
+\item Dr. Spencer Smith
+\item Dr. Jacques Carette
+\item All contributors of the Drasil Project
+\item Students of the class CAS 741
+\end{itemize}
+
+\section*{Software Environment}
+The software application in this project is designed to execute on Ubuntu 18.04 and Derivatives, Windows 10 and, macOS 10.13 and greater.
+
+
+\end{document}
