@@ -2,12 +2,17 @@
 
 \usepackage{tabularx}
 \usepackage{booktabs}
+\usepackage{hyperref}
+
+\setlength{\parskip}{1em}
 
 \title{CAS 741: Problem Statement - \\PID Controller}
 
 \author{Naveen Ganesh Muralidharan . muralidn}
 
-\date{21-September-2020}
+\date{24-September-2020}
+
+\input{../Comments}
 
 \begin{document}
 
@@ -19,38 +24,57 @@
 \toprule
 \textbf{Date} & \textbf{Developer(s)} & \textbf{Change}\\
 \midrule
-21-Sep-2020 & Naveen Ganesh Muralidharan & First revision of the PID problem statement\\
+21-Sep-2020 & Naveen Ganesh Muralidharan & First revision of the PID problem 
+statement\\
+24-Sep-2020 & Naveen Ganesh Muralidharan & Updates as per the latest problem
+statement checklist, viz,
+\begin{itemize}
+\item Included the Comments.tex file. 
+\item Wrapped text in the .tex file to 80 chars. 
+\item Corrected few grammatical mistakes.
+\item Added reference to Drasil.
+\end{itemize}\\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 \section*{Problem Statement}
 
-A Closed Loop control system can be defined as the system where the input to the Power Plant is continuously 
-adjusted by monitoring the feedback from the Power Plant until the expected Set-Point is reached. The 
-Closed Loop control is used in a variety of applications such as cruise control of an automobile, temperature 
-control in a thermostat, and many more. The heart of the control loop is the Proportional, Integral, Derivative 
-(PID) controller which drives the input to the Power Plant in the loop. However, the PID controller in a loop must 
-be tuned before it is deemed ready for use. This involves setting optimal values for the respective Proportional, 
-Integral and Derivative gain constants. Therefore, a model is necessary to simulate the inputs and outputs of a 
-control loop with which the PID gains can be tuned.
+A closed loop control system can be defined as the system where the input to the 
+Power Plant is continuously adjusted by monitoring the feedback from the Power 
+Plant until the expected Set-Point is reached. The closed loop control is used 
+in a variety of applications such as cruise control of an automobile, 
+temperature control in a thermostat, and many more. The heart of the control 
+loop is a  Proportional, Integral, Derivative (PID) controller that drives the 
+input to the Power Plant in the loop. However, the PID controller in a loop must 
+be tuned before it is deemed ready for use. This involves setting optimal values 
+for the respective Proportional, Integral, and Derivative gain constants. 
+Therefore, a model is necessary to simulate  a control loop, using which the 
+PID gains can be tuned.
 
-The inputs to the model are the Set-Point(numeric),  Proportional Gain(numeric), Integral Gain(numeric), Derivative
-Gain(numeric), total simulation time (numeric) and step time(numeric). The outputs from the model are the Measured Values
-from the Power Plant(numeric list) and time-points (numeric list).
+The inputs to the Model are the Set-Point (numeric), Proportional Gain 
+(numeric), Integral Gain (numeric), Derivative Gain (numeric), Total 
+Simulation Time (numeric) and Step-Time (numeric). The outputs from the Model 
+are the Measured Values from the Power Plant (numeric list) for each iteration, 
+and their respective Time-Points (numeric list).
+
+This Model shall be implemented using the Drasil project. Following is the 
+homepage of the Drasil project,
+
+\url{https://jacquescarette.github.io/Drasil/} 
 
 \section*{Stakeholders}
-Primary stakeholders of this project are,
+Primary stakeholders of this Project are,
 \begin{itemize}
 \item Naveen Ganesh Muralidharan
 \item Dr. Spencer Smith
+\item Students of the class CAS 741
 \item Dr. Jacques Carette
 \item All contributors of the Drasil Project
-\item Students of the class CAS 741
 \end{itemize}
 
 \section*{Software Environment}
-The software application in this project is designed to execute on Ubuntu 18.04 and Derivatives, Windows 10 and, macOS 10.13 and greater.
-
+The software application in this project is designed to execute on Ubuntu 18.04 
+and Derivatives, Windows 10 and, macOS 10.13 and greater.
 
 \end{document}
