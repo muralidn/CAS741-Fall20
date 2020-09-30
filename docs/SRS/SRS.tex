@@ -77,8 +77,9 @@
 
 \begin{document}
 
-\title{Software Requirements Specification for \progname: subtitle describing software} 
-\author{Author Name(s)}
+\title{Software Requirements Specification for \progname: \
+Simulation of a PID control loop.} 
+\author{Naveen Ganesh Muralidharan}
 \date{\today}
 	
 \maketitle
@@ -96,7 +97,7 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
+28-Sep-2020 & 1.0 & First draft of the SRS\\
 Date 2 & 1.1 & Notes\\
 \bottomrule
 \end{tabularx}
@@ -105,7 +106,8 @@ Date 2 & 1.1 & Notes\\
 
 \section{Reference Material}
 
-This section records information for easy reference.
+1. \citet{SmithAndLai2005, SmithEtAl2007}.\
+2. \cite{Smith2006, SmithMcCutchanAndCarette2017}
 
 \subsection{Table of Units}
 
@@ -121,12 +123,7 @@ description of the unit and the SI name.
     \toprule		
     \textbf{symbol} & \textbf{unit} & \textbf{SI}\\
     \midrule 
-    \si{\metre} & length & metre\\
-    \si{\kilogram} & mass	& kilogram\\
     \si{\second} & time & second\\
-    \si{\celsius} & temperature & centigrade\\
-    \si{\joule} & energy & joule\\
-    \si{\watt} & power & watt (W = \si{\joule\per\second})\\
     \bottomrule
   \end{tabular}
   %	\caption{Provide a caption}
@@ -161,11 +158,16 @@ systems.  The symbols are listed in alphabetical order.
 %\noindent \begin{tabularx}{1.0\textwidth}{l l X}
 \noindent \begin{longtable*}{l l p{12cm}} \toprule
 \textbf{symbol} & \textbf{unit} & \textbf{description}\\
-\midrule 
-$A_C$ & \si[per-mode=symbol] {\square\metre} & coil surface area
+\midrule
+$K_d$ & N/A & Derivative Constant
 \\
-$A_\text{in}$ & \si[per-mode=symbol] {\square\metre} & surface area over 
-which heat is transferred in
+$K_i$ & N/A & Integral Constant
+\\
+$K_p$ & N/A & Proportional Constant
+\\
+$T_\text{sim}$ & \si[per-mode=symbol] {\second} & Total Simulation Time
+\\ 
+$t_\text{step}$ & \si[per-mode=symbol] {\second} & Simulation step time
 \\ 
 \bottomrule
 \end{longtable*}
@@ -185,10 +187,11 @@ which heat is transferred in
   GS & Goal Statement\\
   IM & Instance Model\\
   LC & Likely Change\\
+  PID & Proportional Integral Derivative\\
+  \progname{} & Proportional Integral Derivative Controller\\
   PS & Physical System Description\\
   R & Requirement\\
   SRS & Software Requirements Specification\\
-  \progname{} & \plt{put an expanded version of your program name here (as appropriate)}\\
   T & Theoretical Model\\
   \bottomrule
 \end{tabular}\\
@@ -270,6 +273,23 @@ a paragraph or two that describes the problem, followed by a ``roadmap''
 paragraph.  A roadmap orients the reader by telling them what sub-sections to
 expect in the Introduction section.}
 
+A closed-loop control system can be defined as the system where the input to the 
+Power Plant is continuously adjusted by monitoring the feedback from the Power 
+Plant until the expected Set-Point is reached. The closed-loop control is used 
+in a variety of applications such as cruise control of an automobile, 
+temperature control in a thermostat, and many more. The heart of the control 
+loop is a Proportional, Integral, Derivative (PID) controller that drives the 
+input to the Power Plant in the loop. However, the PID controller in a loop must 
+be tuned before it is deemed ready for use. This involves setting optimal values 
+for the respective Proportional, Integral, and Derivative gain constants. 
+Therefore, a model is necessary to simulate a control loop, using which the 
+PID gains can be tuned.
+
+
+In this section, the purpose of this document is discussed, followed by the 
+scope of the requirements, and then a brief discussion about the characteristics 
+of the intended reader, and finally the organization of this document.
+
 \subsection{Purpose of Document}
 
 \plt{This section summarizes the purpose of the SRS document.  It does not focus
@@ -281,6 +301,13 @@ expect in the Introduction section.}
   project.  The purpose section will be similar between projects.  The purpose
   of the document is the purpose of the SRS, including communication, planning
   for the design stage, etc.}
+
+The purpose of this document is to capture all the necessary information
+including Assumptions, Data Definitions, Data constrains,Theory and Instance 
+models, and Requirements at an appropriate level which provides a comprehensive
+understanding of the system, and faciliates an unambiguous developent of the 
+software, and test procedures.
+ 
 
 \subsection{Scope of Requirements} 
 
