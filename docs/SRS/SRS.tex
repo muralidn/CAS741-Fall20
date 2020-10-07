@@ -98,7 +98,6 @@ Simulation of a PID control loop.}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
 28-Sep-2020 & 1.0 & First draft of the SRS\\
-Date 2 & 1.1 & Notes\\
 \bottomrule
 \end{tabularx}
 
@@ -106,8 +105,7 @@ Date 2 & 1.1 & Notes\\
 
 \section{Reference Material}
 
-1. \citet{SmithAndLai2005, SmithEtAl2007}.\
-2. \cite{Smith2006, SmithMcCutchanAndCarette2017}
+This section records information for easy reference.
 
 \subsection{Table of Units}
 
@@ -159,15 +157,21 @@ systems.  The symbols are listed in alphabetical order.
 \noindent \begin{longtable*}{l l p{12cm}} \toprule
 \textbf{symbol} & \textbf{unit} & \textbf{description}\\
 \midrule
-$K_d$ & N/A & Derivative Constant
+$e(t)$ & N/A & Error Signal at time t
 \\
-$K_i$ & N/A & Integral Constant
+$K_d$ & N/A & Derivative Gain
 \\
-$K_p$ & N/A & Proportional Constant
+$K_i$ & N/A & Integral Gain
+\\
+$K_p$ & N/A & Proportional Gain
 \\
 $T_\text{sim}$ & \si[per-mode=symbol] {\second} & Total Simulation Time
 \\ 
 $t_\text{step}$ & \si[per-mode=symbol] {\second} & Simulation step time
+\\
+$c(t)$ & N/A & Control Variable at time t
+\\
+$y(t)$ & N/A & Process Variable at time t
 \\ 
 \bottomrule
 \end{longtable*}
@@ -269,26 +273,21 @@ $t_\text{step}$ & \si[per-mode=symbol] {\second} & Simulation step time
 
 \plt{The introduction section is written to introduce the problem.  It starts
   general and focuses on the problem domain. The general advice is to start with
-a paragraph or two that describes the problem, followed by a ``roadmap''
-paragraph.  A roadmap orients the reader by telling them what sub-sections to
+a paragraph or two that describes the problem, followed by a ``road-map''
+paragraph.  A road-map orients the reader by telling them what sub-sections to
 expect in the Introduction section.}
 
-A closed-loop control system can be defined as the system where the input to the 
-Power Plant is continuously adjusted by monitoring the feedback from the Power 
-Plant until the expected Set-Point is reached. The closed-loop control is used 
-in a variety of applications such as cruise control of an automobile, 
-temperature control in a thermostat, and many more. The heart of the control 
-loop is a Proportional, Integral, Derivative (PID) controller that drives the 
-input to the Power Plant in the loop. However, the PID controller in a loop must 
-be tuned before it is deemed ready for use. This involves setting optimal values 
-for the respective Proportional, Integral, and Derivative gain constants. 
-Therefore, a model is necessary to simulate a control loop, using which the 
-PID gains can be tuned.
+A closed loop control system with a PID controller is used in a wide range of 
+applications such as a thermostat, or cruise-control of an automobile. The 
+gains of a PID controller in an application have to be tuned before the 
+controller is ready for production. Therefore, a software model is necessary for 
+the simulation of PID controller. This model can be used with the simulation of 
+the Power Plant to calibrate the gains of the PID controller.   
 
-
-In this section, the purpose of this document is discussed, followed by the 
-scope of the requirements, and then a brief discussion about the characteristics 
-of the intended reader, and finally the organization of this document.
+~\newline
+In this section the purpose of the document is discussed, followed by the scope
+of the requirements, characteristics of intended reader, and finally the 
+organization of the document.
 
 \subsection{Purpose of Document}
 
@@ -303,11 +302,11 @@ of the intended reader, and finally the organization of this document.
   for the design stage, etc.}
 
 The purpose of this document is to capture all the necessary information
-including Assumptions, Data Definitions, Data constrains,Theory and Instance 
-models, and Requirements at an appropriate level which provides a comprehensive
-understanding of the system, and faciliates an unambiguous developent of the 
-software, and test procedures.
- 
+including assumptions, data definitions, data constrains, theory and instance 
+models, and the requirements to provide the reader with a comprehensive
+understanding of the PID controller, and to facilitate an unambiguous 
+development of the software and test procedures for the software model of a PID
+controller. 
 
 \subsection{Scope of Requirements} 
 
@@ -325,6 +324,10 @@ software, and test procedures.
   at the same level of abstraction.  The scope is at a high level.  The focus is
   on the ``big picture'' assumptions.  The assumptions section lists, and
   describes, all of the assumptions.}
+  
+The scope of the requirements is limited to the simulation of a closed control 
+loop control system with three subsystems, namely, a summer, a PID controller 
+and a power plant.
 
 \subsection{Characteristics of Intended Reader} \label{sec_IntendedReader}
 
@@ -343,12 +346,32 @@ software, and test procedures.
   instance, is high school physics adequate, or should the reader have had a
   graduate course on advanced quantum mechanics?}
 
+The reader of this document is assumed to have a prerequisite knowledge of 
+control theory at a second year undergraduate level, and high school 
+calculus. 
+
 \subsection{Organization of Document}
 
 \plt{This section provides a roadmap of the SRS document.  It will help the
   reader orient themselves.  It will provide direction that will help them
   select which sections they want to read, and in what order.  This section will
   be similar between project.}
+
+The sections in this document is are based on \citet{SmithAndLai2005, 
+SmithEtAl2007}. Subsequent sections of this document will breakdown and present 
+the problem in a less abstract manner than the previous section. 
+For example, the context for the mathematical equations required to solve the 
+problem is set in the theoretical models, and are refined in general statements 
+and data definitions, and the final form of the equations are derived in the 
+instance models. 
+
+~\newline
+The suggested order of reading this document for a reader who is not familiar 
+with the domain would be to start with the problem description, review the goals, 
+and proceed downwards to the subsequent sections. Reader with knowledge of the 
+domain experts can review any section of this document and and choose proceed in 
+either direction.
+
 
 \section{General System Description}
 
@@ -381,7 +404,7 @@ characteristics and lists the system constraints.  \plt{This text can likely be
 
 \begin{figure}[h!]
 \begin{center}
- \includegraphics[width=0.6\textwidth]{SystemContextFigure}
+ \includegraphics[width=0.7\textwidth]{SystemContextFigure}
 \caption{System Context}
 \label{Fig_SystemContext} 
 \end{center}
@@ -394,13 +417,13 @@ characteristics and lists the system constraints.  \plt{This text can likely be
 \begin{itemize}
 \item User Responsibilities:
 \begin{itemize}
-\item 
+\item Feed inputs to the model.
+\item Review the Power-Plant response.
+\item Tune the controller gains.
 \end{itemize}
 \item \progname{} Responsibilities:
 \begin{itemize}
-\item Detect data type mismatch, such as a string of characters instead of a
-  floating point number
-\item 
+\item Calculate the outputs of the PID controller, and Power Plant.
 \end{itemize}
 \end{itemize}
 
@@ -414,8 +437,11 @@ characteristics and lists the system constraints.  \plt{This text can likely be
   user characteristics should be specific an unambiguous.  For instance, ``The
   end user of \progname{} should have an understanding of undergraduate Level 1
   Calculus and Physics.''}
+  
+The end user of \progname{} should have an understanding of undergraduate Level
+1 Control Engineering and High school Calculus.
 
-\subsection{System Constraints}
+%\subsection{System Constraints}
 
 \plt{System constraints differ from other type of requirements because they
   limit the developers’ options in the system design and they identify how the
@@ -424,6 +450,8 @@ characteristics and lists the system constraints.  \plt{This text can likely be
   abstraction is relaxed here.  However, system constraints should only be
   included if they are truly required. In the context of CAS 741, you often will
   may not have any system constraints.}
+   
+
 
 \section{Specific System Description}
 
@@ -435,8 +463,8 @@ the instance models.  \plt{Add any project specific details that are relevant
 
 \subsection{Problem Description} \label{Sec_pd}
 
-\progname{} is intended to solve ... \plt{What problem does your program solve?
-The description here should be in the problem space, not the solution space.}
+This program intends to provide a model of a PID controller that can be used 
+for the tuning of the gain constants before the deployment of the controller.
 
 \subsubsection{Terminology and  Definitions}
 
@@ -452,7 +480,23 @@ easier to correctly understand the requirements:
 
 \begin{itemize}
 
-\item 
+\item [Control Variable:] The output from the PID controller.
+
+\item [Error Value:] Input to the PID controller. Error Value is the 
+difference between the Set Point and the Process Variable. 
+
+\item [Power Plant:] The system to be controlled. 
+
+\item [Process Variable:] The output value from the power plant.
+
+\item [Set-Point:] The desired value that the control system much reach.
+
+\item [Simulation Time:] Total execution time of the PID loop.
+
+\item [Step Time:] Optimal time for one iteration of the control loop.
+
+\item [Summing Point:] Control block where the difference between the Set-Point
+and the Process Variable is computed. 
 
 \end{itemize}
 
@@ -471,28 +515,30 @@ easier to correctly understand the requirements:
   interactions between the elements and their physical environment; ii) the
   interactions between elements; and, iii) the initial or boundary conditions.}
 
-The physical system of \progname{}, as shown in Figure~?,
+The physical system of \progname{}, as shown in Figure-1,
 includes the following elements:
 
 \begin{itemize}
 
-\item[PS1:] 
+\item[PS1:] Summing Point.
 
-\item[PS2:] ...
+\item[PS2:] PID Controller. 
+
+\item[PS3:] Power Plant.
 
 \end{itemize}
 
 \plt{A figure here makes sense for most SRS documents}
 
-% \begin{figure}[h!]
-% \begin{center}
-% %\rotatebox{-90}
-% {
-%  \includegraphics[width=0.5\textwidth]{<FigureName>}
-% }
-% \caption{\label{<Label>} <Caption>}
-% \end{center}
-% \end{figure}
+\begin{figure}[h!]
+\begin{center}
+%\rotatebox{-90}
+{
+ \includegraphics[width=0.9\textwidth]{Fig_PIDController.png}
+}
+\caption{\label{<Label>} PID Control Loop}
+\end{center}
+\end{figure}
 
 \subsubsection{Goal Statements}
 
@@ -506,13 +552,20 @@ includes the following elements:
   amount of technical language.  They should be understandable by non-domain
   experts.}
 
-\noindent Given the \plt{inputs}, the goal statements are:
+\noindent Given the Set-Point, Proportional Gain, Integral Gain, Derivative Gain, 
+Total Simulation time and Step Time, the goal statements are:
 
 \begin{itemize}
-
-\item[GS\refstepcounter{goalnum}\thegoalnum \label{G_meaningfulLabel}:] \plt{One
+\item[GS\refstepcounter{goalnum}\thegoalnum \label{G_ES}:] \plt{One
     sentence description of the goal.  There may be more than one.  Each Goal
     should have a meaningful label.}
+	Calculate the Error-Value at every step.
+
+\item[GS\refstepcounter{goalnum}\thegoalnum \label{G_CV}:] Compute the 
+output of the PID-controller at every step.
+
+\item[GS\refstepcounter{goalnum}\thegoalnum \label{G_PV}:] Compute the 
+output of the Power-Plant at every step.
 
 \end{itemize}
 
@@ -587,12 +640,39 @@ likely change [LC], in which the respective assumption is used.
 
 \begin{itemize}
 
-\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_meaningfulLabel}:]
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_PP}:]
   \plt{Short description of each assumption.  Each assumption
     should have a meaningful label.  Use cross-references to identify the
     appropriate traceability to T, GD, DD etc., using commands like dref, ddref
     etc.  Each assumption should be atomic - that is, there should not be an
     explicit (or implicit) ``and'' in the text of an assumption.}
+	The Power Plant and the Sensor are coupled into a single system, with a 
+	response of $f(x) = \sqrt x$.
+
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_SP}:] The Set-Point 
+does not vary during the simulation.
+
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_Attn}:] There are no 
+external disturbances during the simulation.
+
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_Delay}:] There are no 
+delays in the signal propagation.
+
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_Domain}:] All analysis 
+are in the time domain.
+
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_Tuning}:] This model will
+be used for Manual tuning of the contol gains.
+
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_Inital}:] There is no 
+residual error, aka. inital value.
+
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_DT}:] There is no Dead
+Time in the response of the Power Plant.
+
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_DB}:] There is no Dead
+Band in the response of the controller.
+
 
 \end{itemize}
 
@@ -617,23 +697,39 @@ on.  \plt{Modify the examples below for your problem, and add additional models
   \rowcolor[gray]{0.9}
   Number& T\refstepcounter{theorynum}\thetheorynum \label{T_COE}\\
   \hline
-  Label&\bf Conservation of thermal energy\\
+  Label&\bf Calculus - Definite Integrals\\
   \hline
-  Equation&  $-{\bf \nabla \cdot q} + g$ = $\rho C \frac{\partial T}{\partial t}$\\
+  Equation&  $\int_{a}^{b} f(x) dx$ \\
   \hline
-  Description & 
-                The above equation gives the conservation of energy for transient heat transfer in a material
-                of specific heat capacity $C$ (\si{\joule\per\kilogram\per\celsius}) and density $\rho$ 
-                (\si{\kilogram\per\cubic\metre}), where $\bf q$ is the thermal flux vector (\si{\watt\per\square\metre}),
-                $g$ is the volumetric heat generation
-                (\si{\watt\per\cubic\metre}), $T$ is the temperature
-                (\si{\celsius}),  $t$ is time (\si{\second}), and $\nabla$ is
-                the gradient operator.  For this equation to apply, other forms
-                of energy, such as mechanical energy, are assumed to be negligible in the
-                system (\aref{A_OnlyThermalEnergy}).  In general, the material properties ($\rho$ and $C$) depend on temperature.\\
+  Description & Real valued function f(x) integrated over closed limits [a,b].\\
   \hline
   Source &
-           \url{http://www.efunda.com/formulae/heat_transfer/conduction/overview_cond.cfm}\\
+           \url{https://en.wikipedia.org/wiki/Integral}\\
+  % The above web link should be replaced with a proper citation to a publication
+  \hline
+  Ref.\ By & \dref{ROCT}\\
+  \hline
+\end{tabular}
+\end{minipage}\\
+
+~\newline
+
+\noindent
+\begin{minipage}{\textwidth}
+\renewcommand*{\arraystretch}{1.5}
+\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
+  \hline
+  \rowcolor[gray]{0.9}
+  Number& T\refstepcounter{theorynum}\thetheorynum \label{T_COE}\\
+  \hline
+  Label&\bf Calculus - Differentiation\\
+  \hline
+  Equation&  $\frac{dy}{dx}$ \\
+  \hline
+  Description & Rate of change of y with respect to x\\
+  \hline
+  Source &
+           \url{https://en.wikipedia.org/wiki/Derivative}\\
   % The above web link should be replaced with a proper citation to a publication
   \hline
   Ref.\ By & \dref{ROCT}\\
@@ -668,7 +764,7 @@ instance models.
 \rowcolor[gray]{0.9}
 Number& GD\refstepcounter{defnum}\thedefnum \label{NL}\\
 \hline
-Label &\bf Newton's law of cooling \\
+Label &\bf Integration over time \\
 \hline
 % Units&$MLt^{-3}T^0$\\
 % \hline
