@@ -68,6 +68,8 @@
 \newcommand{\iref}[1]{IM\ref{#1}}
 \newcounter{reqnum} %Requirement Number
 \newcommand{\rthereqnum}{P\thereqnum}
+\newcounter{nfreqnum} %Non-Performance requirement Number
+\newcommand{\rthenfreqnum}{P\thenfreqnum}
 \newcommand{\rref}[1]{R\ref{#1}}
 \newcounter{lcnum} %Likely change number
 \newcommand{\lthelcnum}{LC\thelcnum}
@@ -97,7 +99,7 @@ Simulation of a PID control loop.}
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-28-Sep-2020 & 1.0 & First draft of the SRS\\
+09-Oct-2020 & 1.0 & First draft of the SRS\\
 \bottomrule
 \end{tabularx}
 
@@ -157,21 +159,29 @@ systems.  The symbols are listed in alphabetical order.
 \noindent \begin{longtable*}{l l p{12cm}} \toprule
 \textbf{symbol} & \textbf{unit} & \textbf{description}\\
 \midrule
-$e(t)$ & N/A & Error Signal at time t
+$e(t)$ & Mathematical value (dimensionless) & Error Signal at time t
 \\
-$K_d$ & N/A & Derivative Gain
+$K_d$ & Constant (dimensionless) & Derivative Gain
 \\
-$K_i$ & N/A & Integral Gain
+$K_i$ &  Constant (dimensionless) & Integral Gain
 \\
-$K_p$ & N/A & Proportional Gain
+$K_p$ &  Constant (dimensionless) & Proportional Gain
+\\
+$SP$ & Mathematical value (dimensionless) & Set Point
 \\
 $T_\text{sim}$ & \si[per-mode=symbol] {\second} & Total Simulation Time
+\\
+$T_\text{elapsed}$ & \si[per-mode=symbol] {\second} & Elapsed time
+\\
+$T_\text{now}$ & \si[per-mode=symbol] {\second} & Time point now
 \\ 
+$T_\text{prev}$ & \si[per-mode=symbol] {\second} & Previous time point
+\\
 $t_\text{step}$ & \si[per-mode=symbol] {\second} & Simulation step time
 \\
-$c(t)$ & N/A & Control Variable at time t
+$u(t)$ & Mathematical value (dimensionless) & Control Variable at time t
 \\
-$y(t)$ & N/A & Process Variable at time t
+$y(t)$ & Mathematical value (dimensionless) & Process Variable at time t
 \\ 
 \bottomrule
 \end{longtable*}
@@ -186,15 +196,23 @@ $y(t)$ & N/A & Process Variable at time t
   \textbf{symbol} & \textbf{description}\\
   \midrule 
   A & Assumption\\
+  API & Application Program Interface\\
+  CV & Control Variable\\
+  D & Derivative term of the PID controller\\
   DD & Data Definition\\
+  etc & Et cetra\\
   GD & General Definition\\
   GS & Goal Statement\\
+  I & Integral term of the PID controller\\
   IM & Instance Model\\
   LC & Likely Change\\
+  P & Proportional term of the PID controller\\
   PID & Proportional Integral Derivative\\
   \progname{} & Proportional Integral Derivative Controller\\
   PS & Physical System Description\\
+  PV & Process Variable\\
   R & Requirement\\
+  SP & Set Point\\
   SRS & Software Requirements Specification\\
   T & Theoretical Model\\
   \bottomrule
@@ -278,15 +296,14 @@ paragraph.  A road-map orients the reader by telling them what sub-sections to
 expect in the Introduction section.}
 
 A closed loop control system with a PID controller is used in a wide range of 
-applications such as a thermostat, or cruise-control of an automobile. The 
-gains of a PID controller in an application have to be tuned before the 
+applications such as a thermostat, automobile cruise-control etc. The 
+gains of a PID controller in an application must be tuned before the 
 controller is ready for production. Therefore, a software model is necessary for 
-the simulation of PID controller. This model can be used with the simulation of 
-the Power Plant to calibrate the gains of the PID controller.   
+the simulation of PID controller.
 
 ~\newline
-In this section the purpose of the document is discussed, followed by the scope
-of the requirements, characteristics of intended reader, and finally the 
+In this section, the purpose of the document is first discussed, followed by the
+scope of the requirements, characteristics of intended reader, and finally the 
 organization of the document.
 
 \subsection{Purpose of Document}
@@ -302,11 +319,9 @@ organization of the document.
   for the design stage, etc.}
 
 The purpose of this document is to capture all the necessary information
-including assumptions, data definitions, data constrains, theory and instance 
-models, and the requirements to provide the reader with a comprehensive
-understanding of the PID controller, and to facilitate an unambiguous 
-development of the software and test procedures for the software model of a PID
-controller. 
+including assumptions, data definitions, constraints, models, and 
+requirements to facilitate an unambiguous development of the PID controller 
+software and test procedures.
 
 \subsection{Scope of Requirements} 
 
@@ -326,8 +341,8 @@ controller.
   describes, all of the assumptions.}
   
 The scope of the requirements is limited to the simulation of a closed control 
-loop control system with three subsystems, namely, a summer, a PID controller 
-and a power plant.
+loop control system with three subsystems, namely, a Summer, a PID controller 
+and a Power Plant.
 
 \subsection{Characteristics of Intended Reader} \label{sec_IntendedReader}
 
@@ -347,8 +362,7 @@ and a power plant.
   graduate course on advanced quantum mechanics?}
 
 The reader of this document is assumed to have a prerequisite knowledge of 
-control theory at a second year undergraduate level, and high school 
-calculus. 
+Control Systems at an undergraduate level, and high school calculus. 
 
 \subsection{Organization of Document}
 
@@ -361,21 +375,19 @@ The sections in this document is are based on \citet{SmithAndLai2005,
 SmithEtAl2007}. Subsequent sections of this document will breakdown and present 
 the problem in a less abstract manner than the previous section. 
 For example, the context for the mathematical equations required to solve the 
-problem is set in the theoretical models, and are refined in general statements 
-and data definitions, and the final form of the equations are derived in the 
-instance models. 
+problem is set in the Theoretical Models and are refined in General and Data 
+Definitions and the final form of the equations are derived in the Instance 
+Models. 
 
 ~\newline
 The suggested order of reading this document for a reader who is not familiar 
-with the domain would be to start with the problem description, review the goals, 
-and proceed downwards to the subsequent sections. Reader with knowledge of the 
-domain experts can review any section of this document and and choose proceed in 
-either direction.
-
+with the domain would be to start with the problem description, review goals, 
+and proceed to the subsequent sections. Reader with knowledge of the domain 
+can directly review the Instance Models and choose to proceed in either direction.
 
 \section{General System Description}
 
-This section provides general information about the system.  It identifies the
+This section provides general information about the system. It identifies the
 interfaces between the system and its environment, describes the user
 characteristics and lists the system constraints.  \plt{This text can likely be
   borrowed verbatim.}
@@ -418,7 +430,7 @@ characteristics and lists the system constraints.  \plt{This text can likely be
 \item User Responsibilities:
 \begin{itemize}
 \item Feed inputs to the model.
-\item Review the Power-Plant response.
+\item Review the response of the Power-Plant.
 \item Tune the controller gains.
 \end{itemize}
 \item \progname{} Responsibilities:
@@ -438,8 +450,18 @@ characteristics and lists the system constraints.  \plt{This text can likely be
   end user of \progname{} should have an understanding of undergraduate Level 1
   Calculus and Physics.''}
   
-The end user of \progname{} should have an understanding of undergraduate Level
-1 Control Engineering and High school Calculus.
+The end user of \progname{} should understand undergraduate Level 2 Control 
+Systems and High school Calculus.
+
+\subsection{System Constraints}
+
+\plt{System constraints differ from other type of requirements because they
+  limit the developers’ options in the system design and they identify how the
+  eventual system must fit into the world. This is the only place in the SRS
+  where design decisions can be specified.  That is, the quality requirement for
+  abstraction is relaxed here.  However, system constraints should only be
+  included if they are truly required. In the context of CAS 741, you often will
+  may not have any system constraints.}
 
 %\subsection{System Constraints}
 
@@ -451,7 +473,7 @@ The end user of \progname{} should have an understanding of undergraduate Level
   included if they are truly required. In the context of CAS 741, you often will
   may not have any system constraints.}
    
-
+No system constraints identified for \progname{}.
 
 \section{Specific System Description}
 
@@ -474,7 +496,7 @@ The terminology is used to introduce concepts from the world outside of the
 mathematical model  The terminology provides a real world connection to give the
 mathematical model meaning.}
 
-This subsection provides a list of terms that are used in the subsequent
+This subsection provides a list of terms which are used in the subsequent
 sections and their meaning, with the purpose of reducing ambiguity and making it
 easier to correctly understand the requirements:
 
@@ -485,15 +507,18 @@ easier to correctly understand the requirements:
 \item [Error Value:] Input to the PID controller. Error Value is the 
 difference between the Set Point and the Process Variable. 
 
+\item [Elapsed Time:] Time elapsed between subsequent iterations of the control
+loop.
+
 \item [Power Plant:] The system to be controlled. 
 
 \item [Process Variable:] The output value from the power plant.
 
 \item [Set-Point:] The desired value that the control system much reach.
 
-\item [Simulation Time:] Total execution time of the PID loop.
+\item [Simulation Time:] Total execution time of the application.
 
-\item [Step Time:] Optimal time for one iteration of the control loop.
+\item [Step Time:] Optimal wait time for one iteration of the control loop.
 
 \item [Summing Point:] Control block where the difference between the Set-Point
 and the Process Variable is computed. 
@@ -515,16 +540,16 @@ and the Process Variable is computed.
   interactions between the elements and their physical environment; ii) the
   interactions between elements; and, iii) the initial or boundary conditions.}
 
-The physical system of \progname{}, as shown in Figure-1,
+The physical system of a PID control loop, as shown in Figure-1,
 includes the following elements:
 
 \begin{itemize}
 
-\item[PS1:] Summing Point.
+\item[PS1:] Summing Point
 
-\item[PS2:] PID Controller. 
+\item[PS2:] PID Controller 
 
-\item[PS3:] Power Plant.
+\item[PS3:] Power Plant
 
 \end{itemize}
 
@@ -556,16 +581,19 @@ includes the following elements:
 Total Simulation time and Step Time, the goal statements are:
 
 \begin{itemize}
-\item[GS\refstepcounter{goalnum}\thegoalnum \label{G_ES}:] \plt{One
-    sentence description of the goal.  There may be more than one.  Each Goal
-    should have a meaningful label.}
-	Calculate the Error-Value at every step.
+% \item[GS\refstepcounter{goalnum}\thegoalnum \label{G_ES}:] \plt{One
+    % sentence description of the goal.  There may be more than one.  Each Goal
+    % should have a meaningful label.}
+	% Calculate the Error-Value at every step.
 
-\item[GS\refstepcounter{goalnum}\thegoalnum \label{G_CV}:] Compute the 
-output of the PID-controller at every step.
+% \item[GS\refstepcounter{goalnum}\thegoalnum \label{G_CV}:] Compute the 
+% output of the PID-controller at every step.
 
 \item[GS\refstepcounter{goalnum}\thegoalnum \label{G_PV}:] Compute the 
 output of the Power-Plant at every step.
+
+\item[GS\refstepcounter{goalnum}\thegoalnum \label{G_ET}:] Calculate the 
+elapsed time at every step.
 
 \end{itemize}
 
@@ -646,33 +674,35 @@ likely change [LC], in which the respective assumption is used.
     appropriate traceability to T, GD, DD etc., using commands like dref, ddref
     etc.  Each assumption should be atomic - that is, there should not be an
     explicit (or implicit) ``and'' in the text of an assumption.}
-	The Power Plant and the Sensor are coupled into a single system, with a 
-	response of $f(x) = \sqrt x$.
+	
+    Contrary to the real world, the Power Plant and the Sensor are coupled 
+    into a single system, with a response of $f(x) = \sqrt x$.
 
-\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_SP}:] The Set-Point 
-does not vary during the simulation.
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_EQ}:] This program uses
+ the decoupled form of the equation of the PID controller.
+
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_SP}:] The Set-Point is 
+a constant throughout the execution of the program.
 
 \item[A\refstepcounter{assumpnum}\theassumpnum \label{A_Attn}:] There are no 
-external disturbances during the simulation.
+external disturbances to the Power plant during the simulation [\cite{PID_Wiki}].
 
 \item[A\refstepcounter{assumpnum}\theassumpnum \label{A_Delay}:] There are no 
-delays in the signal propagation.
+delays in the signal propagation, other than the step time,
+during the simulation [\cite{PID_Wiki}].
 
 \item[A\refstepcounter{assumpnum}\theassumpnum \label{A_Domain}:] All analysis 
-are in the time domain.
+are performed in the time domain.
 
-\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_Tuning}:] This model will
-be used for Manual tuning of the contol gains.
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_Tuning}:] This model 
+will be used for the Manual tuning of the control gains by the user.
 
-\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_Inital}:] There is no 
-residual error, aka. inital value.
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_Initial}:] The initial
+value (at the start of the simulation) of the Error Signal is assumed to be 
+zero.
 
-\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_DT}:] There is no Dead
-Time in the response of the Power Plant.
-
-\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_DB}:] There is no Dead
-Band in the response of the controller.
-
+\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_Parallel}:] The Parallel
+form of equations is used for the PID controller.
 
 \end{itemize}
 
@@ -683,61 +713,12 @@ Band in the response of the controller.
   (Section~\ref{sec_phySystDescrip}). Examples of theoretical models are
   physical laws, constitutive equations, relevant conversion factors, etc.}
 
-This section focuses on the general equations and laws that \progname{} is based
-on.  \plt{Modify the examples below for your problem, and add additional models
-  as appropriate.}
+This section focuses on the general equations and laws that the application is 
+based on.  \plt{Modify the examples below for your problem, and add additional 
+models as appropriate.}
+  
+~\newline \progname{} is not based on any general equation or laws.
 
-~\newline
-
-\noindent
-\begin{minipage}{\textwidth}
-\renewcommand*{\arraystretch}{1.5}
-\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
-  \hline
-  \rowcolor[gray]{0.9}
-  Number& T\refstepcounter{theorynum}\thetheorynum \label{T_COE}\\
-  \hline
-  Label&\bf Calculus - Definite Integrals\\
-  \hline
-  Equation&  $\int_{a}^{b} f(x) dx$ \\
-  \hline
-  Description & Real valued function f(x) integrated over closed limits [a,b].\\
-  \hline
-  Source &
-           \url{https://en.wikipedia.org/wiki/Integral}\\
-  % The above web link should be replaced with a proper citation to a publication
-  \hline
-  Ref.\ By & \dref{ROCT}\\
-  \hline
-\end{tabular}
-\end{minipage}\\
-
-~\newline
-
-\noindent
-\begin{minipage}{\textwidth}
-\renewcommand*{\arraystretch}{1.5}
-\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
-  \hline
-  \rowcolor[gray]{0.9}
-  Number& T\refstepcounter{theorynum}\thetheorynum \label{T_COE}\\
-  \hline
-  Label&\bf Calculus - Differentiation\\
-  \hline
-  Equation&  $\frac{dy}{dx}$ \\
-  \hline
-  Description & Rate of change of y with respect to x\\
-  \hline
-  Source &
-           \url{https://en.wikipedia.org/wiki/Derivative}\\
-  % The above web link should be replaced with a proper citation to a publication
-  \hline
-  Ref.\ By & \dref{ROCT}\\
-  \hline
-\end{tabular}
-\end{minipage}\\
-
-~\newline
 
 \subsubsection{General Definitions}\label{sec_gendef}
 
@@ -748,50 +729,13 @@ on.  \plt{Modify the examples below for your problem, and add additional models
   GD could take the general law and apply it to get a 1D equation.}
 
 This section collects the laws and equations that will be used in building the
-instance models.
+instance models. 
+
+~\newline This section is not applicable for  \progname{}.
 
 \plt{Some projects may not have any content for this section, but the section
   heading should be kept.}  \plt{Modify the examples below for your problem, and
   add additional definitions as appropriate.}
-
-~\newline
-
-\noindent
-\begin{minipage}{\textwidth}
-\renewcommand*{\arraystretch}{1.5}
-\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
-\hline
-\rowcolor[gray]{0.9}
-Number& GD\refstepcounter{defnum}\thedefnum \label{NL}\\
-\hline
-Label &\bf Integration over time \\
-\hline
-% Units&$MLt^{-3}T^0$\\
-% \hline
-SI Units&\si{\watt\per\square\metre}\\
-\hline
-Equation&$ q(t) = h \Delta T(t)$  \\
-\hline
-Description &
-Newton's law of cooling describes convective cooling from a surface.  The law is
-stated as: the rate of heat loss from a body is proportional to the difference
-in temperatures between the body and its surroundings.
-\\
-& $q(t)$ is the thermal flux (\si{\watt\per\square\metre}).\\
-& $h$ is the heat transfer coefficient, assumed independent of $T$ (\aref{A_hcoeff})
-	(\si{\watt\per\square\metre\per\celsius}).\\
-&$\Delta T(t)$= $T(t) - T_{\text{env}}(t)$ is the time-dependent thermal gradient
-between the environment and the object (\si{\celsius}).
-\\
-\hline
-  Source & Citation here \\
-  \hline
-  Ref.\ By & \ddref{FluxCoil}, \ddref{FluxPCM}\\
-  \hline
-\end{tabular}
-\end{minipage}\\
-
-\subsubsection*{Detailed derivation of simplified rate of change of temperature}
 
 \plt{This may be necessary when the necessary information does not fit in the
   description field.}
@@ -821,33 +765,258 @@ models. The dimension of each quantity is also given.  \plt{Modify the examples
 \begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
 \hline
 \rowcolor[gray]{0.9}
-Number& DD\refstepcounter{datadefnum}\thedatadefnum \label{FluxCoil}\\
+Number& DD\refstepcounter{datadefnum}\thedatadefnum \label{DD_SP}\\
 \hline
-Label& \bf Heat flux out of coil\\
+Label& \bf Set Point\\
 \hline
-Symbol &$q_C$\\
+Symbol &$SP$\\
 \hline
-% Units& $Mt^{-3}$\\
+% Units& -$\\
 % \hline
-  SI Units & \si{\watt\per\square\metre}\\
+  SI Units & -\\
   \hline
-  Equation&$q_C(t) = h_C (T_C - T_W(t))$, over area $A_C$\\
+  Equation& - \\
   \hline
   Description & 
-                $T_C$ is the temperature of the coil (\si{\celsius}).  $T_W$ is the temperature of the water (\si{\celsius}).  
-                The heat flux out of the coil, $q_C$ (\si{\watt\per\square\metre}), is found by
-                assuming that Newton's Law 
-                of Cooling applies (\aref{A_Newt_coil}).  This law (\dref{NL}) is used on the surface of
-                the coil, which has area $A_C$ (\si{\square\metre}) and heat 
-                transfer coefficient $h_C$
-                (\si{\watt\per\square\metre\per\celsius}).  This equation
-                assumes that the temperature of the coil is constant over time (\aref{A_tcoil}) and that it does not vary along the length
-                of the coil (\aref{A_tlcoil}).
+  The Set Point (SP) is the expected output that the control loop must achieve.
   \\
   \hline
-  Sources& Citation here \\
+  Source &
+  \cite{PID_Control} \\
   \hline
-  Ref.\ By & \iref{ewat}\\
+  Ref.\ By & \iref{IM_EV}\\
+  \hline
+\end{tabular}
+\end{minipage}\\
+
+
+~\newline
+
+\noindent
+\begin{minipage}{\textwidth}
+\renewcommand*{\arraystretch}{1.5}
+\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
+\hline
+\rowcolor[gray]{0.9}
+Number& DD\refstepcounter{datadefnum}\thedatadefnum \label{DD_Proportional}\\
+\hline
+Label& \bf Proportional term\\
+\hline
+Symbol &$P$\\
+\hline
+% Units& -$\\
+% \hline
+  SI Units & -\\
+  \hline
+  Equation& $P$ = $K_p$ . $x(t)$ \\
+  \hline
+  Description & 
+  The proportional term of the PID controller is the product of the input 
+  ($x(t)$) and the proportional gain $K_p$. 
+  \\
+  \hline
+  Source &
+  \cite{PID_Control} \\
+  \hline
+  Ref.\ By & \iref{IM_CV}\\
+  \hline
+\end{tabular}
+\end{minipage}\\
+
+~\newline
+
+\noindent
+\begin{minipage}{\textwidth}
+\renewcommand*{\arraystretch}{1.5}
+\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
+\hline
+\rowcolor[gray]{0.9}
+Number& DD\refstepcounter{datadefnum}\thedatadefnum \label{DD_Integ}\\
+\hline
+Label& \bf Integral term\\
+\hline
+Symbol &$I$\\
+\hline
+% Units& -$\\
+% \hline
+  SI Units & -\\
+  \hline
+  Equation& $I$ = $K_i$ . $\int_{0}^{t} x(\mathrm{T}) d\mathrm{T}$ \\
+  \hline
+  Description & 
+  The integral term of the PID controller is a product of the accumulated input 
+  over time and the integral gain $K_i$.
+  \\
+  \hline
+  Source &
+  \cite{PID_Control} \\
+  \hline
+  Ref.\ By & \iref{IM_CV}\\
+  \hline
+\end{tabular}
+\end{minipage}\\
+
+~\newline
+
+\noindent
+\begin{minipage}{\textwidth}
+\renewcommand*{\arraystretch}{1.5}
+\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
+\hline
+\rowcolor[gray]{0.9}
+Number& DD\refstepcounter{datadefnum}\thedatadefnum \label{DD_Derivative}\\
+\hline
+Label& \bf Derivative term\\
+\hline
+Symbol &$D$\\
+\hline
+% Units& -$\\
+% \hline
+  SI Units & -\\
+  \hline
+  Equation& $D$ = $K_d$ . $\frac{d(x(t))}{dt}$ \\
+  \hline
+  Description & 
+  The derivative term of the PID controller is a product of the rate of change
+  of the input and the derivative constant $K_d$.
+  \\
+  \hline
+  Source &
+  \cite{PID_Control} \\
+  \hline
+  Ref.\ By & \iref{IM_CV}\\
+  \hline
+\end{tabular}
+\end{minipage}\\
+
+~\newline
+
+\noindent
+\begin{minipage}{\textwidth}
+\renewcommand*{\arraystretch}{1.5}
+\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
+\hline
+\rowcolor[gray]{0.9}
+Number& DD\refstepcounter{datadefnum}\thedatadefnum \label{DD_TSim}\\
+\hline
+Label& \bf Total Simulation time \\
+\hline
+Symbol &$T_\text{sim}$\\
+\hline
+% Units& s\\
+% \hline
+  SI Units & second\\
+  \hline
+  Equation& - \\
+  \hline
+  Description & 
+  $T_\text{sim}$ is the total time that the control loop must execute. This is
+  is required to terminate the execution in case the Power-Plant is in an 
+  unstable state (oscillation).
+  \\
+  \hline
+  Source &
+  - \\
+  \hline
+  Ref.\ By & \rref{R_SimTime}\\
+  \hline
+\end{tabular}
+\end{minipage}\\
+
+~\newline
+
+\noindent
+\begin{minipage}{\textwidth}
+\renewcommand*{\arraystretch}{1.5}
+\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
+\hline
+\rowcolor[gray]{0.9}
+Number& DD\refstepcounter{datadefnum}\thedatadefnum \label{DD_TStep}\\
+\hline
+Label& \bf Simulation step time \\
+\hline
+Symbol &$t_\text{step}$\\
+\hline
+% Units& s\\
+% \hline
+  SI Units & second\\
+  \hline
+  Equation& - \\
+  \hline
+  Description & 
+  $t_\text{step}$ is a time between consecutive iterations of the control loop.
+  This is equivalent to the total time taken for the response of the system 
+  (\aref{A_Delay}).
+  \\
+  \hline
+  Source &
+  - \\
+  \hline
+  Ref.\ By & \rref{R_SimTime}\\
+  \hline
+\end{tabular}
+\end{minipage}\\
+
+~\newline
+
+\noindent
+\begin{minipage}{\textwidth}
+\renewcommand*{\arraystretch}{1.5}
+\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
+\hline
+\rowcolor[gray]{0.9}
+Number& DD\refstepcounter{datadefnum}\thedatadefnum \label{DD_TN}\\
+\hline
+Label& \bf Time Point Now \\
+\hline
+Symbol &$T_\text{now}$\\
+\hline
+% Units& s\\
+% \hline
+  SI Units & second\\
+  \hline
+  Equation& - \\
+  \hline
+  Description & 
+  $T_\text{now}$ is the time elapsed since epoch in seconds.
+  \\
+  \hline
+  Source &
+  - \\
+  \hline
+  Ref.\ By & \iref{IM_ET} \ddref{DD_TPrev} \\
+  \hline
+\end{tabular}
+\end{minipage}\\
+
+~\newline
+
+\noindent
+\begin{minipage}{\textwidth}
+\renewcommand*{\arraystretch}{1.5}
+\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
+\hline
+\rowcolor[gray]{0.9}
+Number& DD\refstepcounter{datadefnum}\thedatadefnum \label{DD_TPrev}\\
+\hline
+Label& \bf Previous Time Point \\
+\hline
+Symbol & $T_\text{prev}$\\
+\hline
+% Units& s\\
+% \hline
+  SI Units & second\\
+  \hline
+  Equation& - \\
+  \hline
+  Description & 
+  $T_\text{prev}$ is the last calculated value of Time Point (from \ddref{DD_TN}).
+  \\
+  \hline
+  Source &
+  - \\
+  \hline
+  Ref.\ By & \iref{IM_ET}\\
   \hline
 \end{tabular}
 \end{minipage}\\
@@ -865,10 +1034,9 @@ one which is expressed in mathematical terms. It uses concrete symbols defined
 in Section~\ref{sec_datadef} to replace the abstract symbols in the models 
 identified in Sections~\ref{sec_theoretical} and~\ref{sec_gendef}.
 
-The goals \plt{reference your goals} are solved by \plt{reference your instance
-  models}.  \plt{other details, with cross-references where appropriate.}
-\plt{Modify the examples below for your problem, and add additional models as
-  appropriate.}
+~\newline The goals \ref{G_PV} and \ref{G_ET} are solved by \iref{IM_PV} and \iref{IM_ET} respectively.
+
+\plt{reference your instancemodels.}  \plt{other details, with cross-references where appropriate.} \plt{Modify the examples below for your problem, and add additional models as appropriate.}
 
 ~\newline
 
@@ -880,42 +1048,135 @@ The goals \plt{reference your goals} are solved by \plt{reference your instance
 \begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
   \hline
   \rowcolor[gray]{0.9}
-  Number& IM\refstepcounter{instnum}\theinstnum \label{ewat}\\
+  Number& IM\refstepcounter{instnum}\theinstnum \label{IM_EV}\\
   \hline
-  Label& \bf Energy balance on water to find $T_W$\\
+  Label& \bf Calculate the error signal, $e(t)$\\
   \hline
-  Input&$m_W$, $C_W$, $h_C$, $A_C$, $h_P$, $A_P$, $t_\text{final}$, $T_C$, 
-  $T_\text{init}$, $T_P(t)$ from \iref{epcm}\\
-  & The input is constrained so that $T_\text{init} \leq T_C$ (\aref{A_charge})\\
+  Input& $SP$ (\ddref{DD_SP}), $y(t)$ (\iref{IM_PV}) 
+  ~\newline The initial value of the process variable, $y(t)$, is assumed to be 
+  zero (\aref{A_Initial}).\\
   \hline
-  Output&$T_W(t)$, $0\leq t \leq t_\text{final}$, such that\\
-  &$\frac{dT_W}{dt} = \frac{1}{\tau_W}[(T_C - T_W(t)) + {\eta}(T_P(t) - T_W(t))]$,\\
-  &$T_W(0) = T_P(0) = T_\text{init}$ (\aref{A_InitTemp}) and $T_P(t)$ from \iref{epcm} \\
+  Output & $e(t)$, such that $e(t)$ = $SP$ - $y(t)$\\
   \hline
-  Description&$T_W$ is the water temperature (\si{\celsius}).\\
-  &$T_P$ is the PCM temperature (\si{\celsius}).\\
-  &$T_C$ is the coil temperature (\si{\celsius}).\\
-  &$\tau_W = \frac{m_W C_W}{h_C A_C}$ is a constant (\si{\second}).\\
-  &$\eta = \frac{h_P A_P}{h_C A_C}$ is a constant (dimensionless).\\
-  & The above equation applies as long as the water is in liquid form,
-  $0<T_W<100^o\text{C}$, where $0^o\text{C}$ and $100^o\text{C}$ are the melting
-  and boiling points of water, respectively (\aref{A_OpRange}, \aref{A_Pressure}).
-  \\
+  Description & The error term is the difference between the Set-Point (required
+  value), and Process Variable, (the measured value). The error term is 
+  calculated at each step of the simulation.\\
   \hline
-  Sources& Citation here \\
+  Sources& 
+  \cite{PID_Control} \\
   \hline
-  Ref.\ By & \iref{epcm}\\
+  Ref.\ By & \iref{IM_CV} \rref{R_Calculate}\\
   \hline
 \end{tabular}
 \end{minipage}\\
 
-%~\newline
+~\newline
 
-\subsubsection*{Derivation of ...}
+%Instance Model 2
+\noindent
+\begin{minipage}{\textwidth}
+\renewcommand*{\arraystretch}{1.5}
+\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
+  \hline
+  \rowcolor[gray]{0.9}
+  Number& IM\refstepcounter{instnum}\theinstnum \label{IM_CV}\\
+  \hline
+  Label& \bf Calculate the control variable, $u(t)$\\
+  \hline
+  Input& $e(t)$ (\iref{IM_EV})\\
+  \hline
+  Output & $u(t)$, such that $u(t)$ = $K_p$ . $e(t)$ +  $K_i$ . $\int_{0}^{t} 
+  e(\mathrm{T}) d\mathrm{T}$ + $K_d$ . $\frac{d(e(t))}{dt}$ \\
+  \hline
+  Description & The Control Variable, $u(t)$ is the output of the PID controller.
+  The Control Variable is the sum of the  present (Proportional), past (Integral) 
+  and future (Derivative) values of the error. The control variable is 
+  calculated at each step of the simulation.\\
+  \hline
+  Sources& 
+  \cite{PID_Control} \\
+  \hline
+  Ref.\ By & \iref{IM_PV} \rref{R_Calculate}\\
+  \hline
+\end{tabular}
+\end{minipage}\\
+
+\subsubsection*{Derivation of Control Variable, $u(t)$}
 
 \plt{The derivation shows how the IM is derived from the TMs/GDs.  In cases
   where the derivation cannot be described under the Description field, it will
   be necessary to include this subsection.}
+
+Control Variable = Proportional term (from \ddref{DD_Proportional}) + Integral term 
+        (from \ddref{DD_Integ}) + Derivative term (from \ddref{DD_Derivative})
+
+Therefore, given the input, $e(t)$ (from \iref{IM_EV}), the Control Variable,
+$u(t)$ is,
+
+~\newline $u(t)$ = $K_p$ . $e(t)$ +  $K_i$ . $\int_{0}^{t} e(\mathrm{T}) 
+d\mathrm{T}$ + $K_d$ . $\frac{d(e(t))}{dt}$
+
+
+~\newline
+
+%Instance Model 3
+\noindent
+\begin{minipage}{\textwidth}
+\renewcommand*{\arraystretch}{1.5}
+\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
+  \hline
+  \rowcolor[gray]{0.9}
+  Number& IM\refstepcounter{instnum}\theinstnum \label{IM_PV}\\
+  \hline
+  Label& \bf Calculate the process variable, $y(t)$\\
+  \hline
+  Input& $u(t)$ (from \iref{IM_CV})\\
+  \hline
+  Output & $y(t)$, such that $y(t) = \sqrt u(t)$.\\
+  \hline
+  Description & The Process Variable is the output of the power plant 
+  (\aref{A_PP}). The Process Variable is calculated at each step of the 
+  simulation.\\
+  \hline
+  Sources& 
+  - \\
+  \hline
+  Ref.\ By & \iref{IM_EV} \rref{R_Calculate} \rref{R_Output}\\
+  \hline
+\end{tabular}
+\end{minipage}\\
+
+~\newline
+
+%Instance Model 4
+\noindent
+\begin{minipage}{\textwidth}
+\renewcommand*{\arraystretch}{1.5}
+\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
+  \hline
+  \rowcolor[gray]{0.9}
+  Number& IM\refstepcounter{instnum}\theinstnum \label{IM_ET}\\
+  \hline
+  Label& \bf Calculate the Elapsed time, $T_\text{Elapsed}$\\
+  \hline
+  Input& $T_\text{now}$ (\ddref{DD_TN}), $T_\text{prev}$ (\ddref{DD_TPrev})\\
+  \hline
+  Output & $T_\text{Elapsed}$, such that $T_\text{Elapsed} = T_\text{now} - 
+  T_\text{prev}$ \\
+  \hline
+  Description & Time elapsed is the difference between the current time and 
+  the previously calculated time. The Time Elapsed is calculated at each 
+  step of the simulation.\\
+  \hline
+  Sources& 
+  - \\
+  \hline
+  Ref.\ By & \rref{R_Calculate} \rref{R_Output}\\
+  \hline
+\end{tabular}
+\end{minipage}\\
+
+
 
 \subsubsection{Input Data Constraints} \label{sec_DataConstraints}    
 
@@ -942,7 +1203,23 @@ Table~\ref{TblSpecParams}.
   \textbf{Var} & \textbf{Physical Constraints} & \textbf{Software Constraints} &
                              \textbf{Typical Value} & \textbf{Uncertainty}\\
   \midrule 
-  $L$ & $L > 0$ & $L_{\text{min}} \leq L \leq L_{\text{max}}$ & 1.5 \si[per-mode=symbol] {\metre} & 10\%
+  $SP$ & $SP > 0$ & $SP_{\text{min}} \leq SP \leq SP_{\text{max}}$ & 
+  15 & 10\%
+  \\
+  $K_p$ & $K_p \geq 0$ & $K_\text{pMin} \leq K_p \leq K_\text{pMax}$ & 
+  5 & 10\%
+  \\
+  $K_i$ & $K_i \geq 0$ & $K_{\text{iMin}} \leq K_i \leq K_{\text{iMax}}$ & 
+  3 & 10\%
+  \\
+  $K_d$ & $K_d \geq 0$ & $K_{\text{dMin}} \leq K_d \leq K_{\text{dMax}}$ & 
+  3 & 10\%
+  \\
+  $T_\text{sim}$ & $T_\text{sim} > 0$ & $T_\text{simMin} \leq T_\text{sim} \leq 
+  T_\text{simMax}$ & 60 \si[per-mode=symbol] {\second} & 10\%
+  \\
+  $t_\text{step}$ & $t_\text{step} > 0$ & $t_\text{stepMin} \leq t_\text{step} 
+  \leq t_\text{stepMax}$ & 0.01 \si[per-mode=symbol] {\second} & 10\%
   \\
   \bottomrule
 \end{longtable*}
@@ -951,7 +1228,10 @@ Table~\ref{TblSpecParams}.
 \noindent 
 \begin{description}
 \item[(*)] \plt{you might need to add some notes or clarifications}
+There is no ideal value for the Set-Point. However, setting it to the mid 
+point of $SP_{\text{min}}$ and $SP_{\text{max}}$ may help with tuning.
 \end{description}
+
 
 \begin{table}[!h]
 \caption{Specification Parameter Values} \label{TblSpecParams}
@@ -960,7 +1240,18 @@ Table~\ref{TblSpecParams}.
   \toprule
   \textbf{Var} & \textbf{Value} \\
   \midrule 
-  $L_\text{min}$ & 0.1 \si{\metre}\\
+  $SP_{\text{min}}$ & 0.1\\
+  $SP_{\text{max}}$ & 30\\
+  $K_\text{pMin}$ & 0  \\
+  $K_\text{pMax}$ & 10 \\
+  $K_\text{iMin}$ & 0 \\
+  $K_\text{iMax}$ & 10 \\
+  $K_\text{dMin}$ & 0 \\
+  $K_\text{dMax}$ & 10 \\
+  $T_\text{simMin}$ & 1 \si{\second}\\
+  $T_\text{simMax}$ & 120 \si{\second}\\
+  $t_\text{stepMin}$ & 0.01 \si{\second}\\
+  $t_\text{stepMax}$ & 1 \si{\second}\\
   \bottomrule
 \end{longtable*}
 \end{table}
@@ -968,25 +1259,28 @@ Table~\ref{TblSpecParams}.
 \subsubsection{Properties of a Correct Solution} \label{sec_CorrectSolution}
 
 \noindent
-A correct solution must exhibit \plt{fill in the details}.  \plt{These
+The output response of the power plant must be stable (without oscillation) and 
+must reach the Set-Point.
+
+\plt{fill in the details.}  \plt{These
   properties are in addition to the stated requirements.  There is no need to
   repeat the requirements here.  These additional properties may not exist for
   every problem.  Examples include conservation laws (like conservation of
   energy or mass) and known constraints on outputs (which are usually summarized
   in tabular form.  A sample table is shown in Table~\ref{TblOutputVar}}
 
-\begin{table}[!h]
-\caption{Output Variables} \label{TblOutputVar}
-\renewcommand{\arraystretch}{1.2}
-\noindent \begin{longtable*}{l l} 
-  \toprule
-  \textbf{Var} & \textbf{Physical Constraints} \\
-  \midrule 
-  $T_W$ & $T_\text{init} \leq T_W \leq T_C$ (by~\aref{A_charge})
-  \\
-  \bottomrule
-\end{longtable*}
-\end{table}
+% \begin{table}[!h]
+% \caption{Output Variables} \label{TblOutputVar}
+% \renewcommand{\arraystretch}{1.2}
+% \noindent \begin{longtable*}{l l} 
+  % \toprule
+  % \textbf{Var} & \textbf{Physical Constraints} \\
+  % \midrule 
+  % $y(t)$ & $y(t) \leq SP $
+  % \\
+  % \bottomrule
+% \end{longtable*}
+% \end{table}
 
 \section{Requirements}
 
@@ -1003,21 +1297,34 @@ qualities that the software is expected to exhibit.
 
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Inputs}:] \plt{Requirements
     for the inputs that are supplied by the user.  This information has to be
-    explicit.}
+    explicit.} Input the values specified in Table-\ref{TblInputVar}.
 
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_OutputInputs}:] \plt{It isn't
+% \item[R\refstepcounter{reqnum}\thereqnum \label{R_OutputInputs}:] \plt{It isn't
+    % always required, but often echoing the inputs as part of the output is a
+    % good idea.} 
+    
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_InputCheck}:] \plt{It isn't
     always required, but often echoing the inputs as part of the output is a
-    good idea.}
+    good idea.} Ensure that the inputs supplied in \rref{R_Inputs} are within the 
+    limits specified in Table-\ref{TblInputVar}.
 
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Calculate}:] \plt{Calculation
-    related requirements.}
-
-\item[R\refstepcounter{reqnum}\thereqnum \label{R_VerifyOutput}:]
-  \plt{Verification related requirements.}
-
+    related requirements.} Calculate e(t) (from \iref{IM_EV}), u(t) 
+    (from \iref{IM_CV}), y(t) (from \iref{IM_PV}) and $T_\text{elapsed}$ (from 
+    \iref{IM_ET}).
+   
+\item[R\refstepcounter{reqnum}\thereqnum \label{R_SimTime}:] Repeat 
+    \rref{R_Calculate} at $t_\text{step}$ seconds until $T_\text{sim}$ seconds 
+    (from \ddref{DD_TSim}) has elapsed. 
+  
 \item[R\refstepcounter{reqnum}\thereqnum \label{R_Output}:] \plt{Output related
-    requirements.}
+    requirements.} Output the y(t) (from \iref{IM_PV}) and $T_\text{elapsed}$ 
+    (from \iref{IM_ET}) computed at every iteration (from \rref{R_Calculate})
+    after $T_\text{sim}$ seconds (from \ddref{DD_TSim}) has elapsed. 
 
+% \item[R\refstepcounter{reqnum}\thereqnum \label{R_VerifyOutput}:]
+  % \plt{Verification related requirements.} 
+  
 \end{itemize}
 
 \subsection{Nonfunctional Requirements}
@@ -1025,12 +1332,55 @@ qualities that the software is expected to exhibit.
 \plt{List your nonfunctional requirements.  You may consider using a fit
   criterion to make them verifiable.}
 
+\noindent \begin{itemize}
+
+\item[NFR\refstepcounter{nfreqnum}\thenfreqnum \label{R_Portability}:] The code
+shall be portable across multiple Operating Systems platforms.
+
+\item[NFR\refstepcounter{nfreqnum}\thenfreqnum \label{R_Usability1}:] The code
+shall be importable as a module by another program. 
+
+\item[NFR\refstepcounter{nfreqnum}\thenfreqnum \label{R_Security1}:] The code 
+shall protect the inputs against unconventional input values from users. 
+Unconventional in this context refers to a value of a different type, or 
+unexpectedly large or small values. 
+
+\item[NFR\refstepcounter{nfreqnum}\thenfreqnum \label{R_Security2}:] The 
+application shall be void of memory leaks.
+
+\item[NFR\refstepcounter{nfreqnum}\thenfreqnum \label{R_Security3}:] The 
+application shall have protection for divide-by-zero error.
+
+\item[NFR\refstepcounter{nfreqnum}\thenfreqnum \label{R_Maintainability}:] The 
+code shall be thoroughly documented with Design Specifications and User Guides.
+
+\item[NFR\refstepcounter{nfreqnum}\thenfreqnum \label{R_Verifiable}:] The code
+shall be verifiable against a Verification and Validation plan.
+
+\item[NFR\refstepcounter{nfreqnum}\thenfreqnum \label{R_Correctness}:] The code
+shall meet the properties of correct solution specified in 
+\ref{sec_CorrectSolution}.
+
+\end{itemize}
+
 \section{Likely Changes}    
 
 \noindent \begin{itemize}
 
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] \plt{Give
-    the likely changes, with a reference to the related assumption (aref), as appropriate.}
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_PP}:] \plt{Give
+    the likely changes, with a reference to the related assumption (aref), as 
+    appropriate.} The transfer function of the Power-plant could be updated 
+    to model a more complex system (\aref{A_PP}).
+    
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_EQ}:] The equation of the 
+    PID controller could be changed to industrial form (\aref{A_EQ}).
+    
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_Initial}:] A non-zero value
+    of error signal could be used at the start of the simulation 
+    (\aref{A_Initial}).
+    
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_SP}:] The Set Point could be 
+    made a variable during the simulation (\aref{A_SP}).
 
 \end{itemize}
 
@@ -1038,9 +1388,15 @@ qualities that the software is expected to exhibit.
 
 \noindent \begin{itemize}
 
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_meaningfulLabel}:] \plt{Give
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_U_TD}:] \plt{Give
     the unlikely changes.  The design can assume that the changes listed will
-    not occur.}
+    not occur.} The time domain analysis of a PID controller is unlikely to 
+    change (\aref{A_Domain}).
+    
+\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_U_Parallel}:] \plt{Give
+    the unlikely changes.  The design can assume that the changes listed will
+    not occur.} The parallel form of equation for PID controller is 
+    unlikely to change (\aref{A_Parallel}).
 
 \end{itemize}
 
@@ -1055,7 +1411,15 @@ instance models with each other. Table~\ref{Table:R_trace} shows the
 dependencies of instance models, requirements, and data constraints on each
 other. Table~\ref{Table:A_trace} shows the dependencies of theoretical models,
 general definitions, data definitions, instance models, and likely changes on
-the assumptions.
+the assumptions. Table~\ref{Table:R_DD_trace} shows the dependencies of Data
+Definition and Requirements with each other.
+
+The purpose of the traceability graphs is also to provide easy references on
+what has to be additionally modified if a certain component is changed.  The
+arrows in the graphs represent dependencies. The component at the tail of an
+arrow is depended on by the component at the head of that arrow. Therefore, if a
+component is changed, the components that it points to should also be
+changed. 
 
 \plt{You will have to modify these tables for your problem.}
 
@@ -1066,29 +1430,29 @@ the assumptions.
 \begin{landscape}
 \begin{table}[h!]
 \centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
 \hline
-	& \aref{A_OnlyThermalEnergy}& \aref{A_hcoeff}& \aref{A_mixed}& \aref{A_tpcm}& \aref{A_const_density}& \aref{A_const_C}& \aref{A_Newt_coil}& \aref{A_tcoil}& \aref{A_tlcoil}& \aref{A_Newt_pcm}& \aref{A_charge}& \aref{A_InitTemp}& \aref{A_OpRangePCM}& \aref{A_OpRange}& \aref{A_htank}& \aref{A_int_heat}& \aref{A_vpcm}& \aref{A_PCM_state}& \aref{A_Pressure} \\
+	& \aref{A_PP} & \aref{A_EQ} & \aref{A_SP} & \aref{A_Attn} & \aref{A_Delay} & 
+      \aref{A_Domain}& \aref{A_Tuning} & \aref{A_Initial} & \aref{A_Parallel} \\
 \hline
-\tref{T_COE}        & X& & & & & & & & & & & & & & & & & & \\ \hline
-\tref{T_SHE}        & & & & & & & & & & & & & & & & & & & \\ \hline
-\tref{T_LHE}        & & & & & & & & & & & & & & & & & & & \\ \hline
-\dref{NL}           & & X& & & & & & & & & & & & & & & & & \\ \hline
-\dref{ROCT}         & & & X& X& X& X& & & & & & & & & & & & & \\ \hline
-\ddref{FluxCoil}    & & & & & & & X& X& X& & & & & & & & & & \\ \hline
-\ddref{FluxPCM}     & & & X& X& & & & & & X& & & & & & & & & \\ \hline
-\ddref{D_HOF}       & & & & & & & & & & & & & & & & & & & \\ \hline
-\ddref{D_MF}        & & & & & & & & & & & & & & & & & & & \\ \hline
-\iref{ewat}         & & & & & & & & & & & X& X& & X& X& X& & & X \\ \hline
-\iref{epcm}         & & & & & & & & & & & & X& X& & & X& X& X& \\ \hline
-\iref{I_HWAT}       & & & & & & & & & & & & & & X& & & & & X \\ \hline
-\iref{I_HPCM}       & & & & & & & & & & & & & X& & & & & X & \\ \hline
-\lcref{LC_tpcm}     & & & & X& & & & & & & & & & & & & & & \\ \hline
-\lcref{LC_tcoil}    & & & & & & & & X& & & & & & & & & & & \\ \hline
-\lcref{LC_tlcoil}   & & & & & & & & & X& & & & & & & & & & \\ \hline
-\lcref{LC_charge}   & & & & & & & & & & & X& & & & & & & & \\ \hline
-\lcref{LC_InitTemp} & & & & & & & & & & & & X& & & & & & & \\ \hline
-\lcref{LC_htank}    & & & & & & & & & & & & & & & X& & & & \\
+\ddref{DD_SP}           & & & & & & & & &\\ \hline
+\ddref{DD_Proportional} & & & & & & & & &\\ \hline
+\ddref{DD_Integ}        & & & & & & & & &\\ \hline
+\ddref{DD_Derivative}   & & & & & & & & &\\ \hline
+\ddref{DD_TSim}         & & & & & & & & &\\ \hline
+\ddref{DD_TStep}        & & & & &X & & & &\\ \hline
+\ddref{DD_TN}           & & & & & & & & &\\ \hline
+\ddref{DD_TPrev}        & & & & & & & & &\\ \hline
+\iref{IM_EV}            & & & & & & & &X &\\ \hline
+\iref{IM_CV}            & & & & & & & & &\\ \hline
+\iref{IM_PV}            &X & & & & & & & &\\ \hline
+\iref{IM_ET}            & & & & & & & & &\\ \hline
+\lcref{LC_PP}           &X & & & & & & & &\\ \hline
+\lcref{LC_EQ}           & &X & & & & & & &\\ \hline
+\lcref{LC_Initial}      & & & & & & & &X &\\ \hline
+\lcref{LC_SP}           & & &X & & & & & &\\ \hline
+\lcref{LC_U_TD}         & & & & & &X & & &\\ \hline
+\lcref{LC_U_Parallel}      & & & & & & & & &X\\
 \hline
 \end{tabular}
 \caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
@@ -1099,23 +1463,25 @@ the assumptions.
 
 \begin{table}[h!]
 \centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|}
 \hline        
-	& \tref{T_COE}& \tref{T_SHE}& \tref{T_LHE}& \dref{NL}& \dref{ROCT} & \ddref{FluxCoil}& \ddref{FluxPCM} & \ddref{D_HOF}& \ddref{D_MF}& \iref{ewat}& \iref{epcm}& \iref{I_HWAT}& \iref{I_HPCM} \\
+	& \ddref{DD_SP}& \ddref{DD_Proportional} & \ddref{DD_Integ}& 
+    \ddref{DD_Derivative} & \ddref{DD_TSim}& \ddref{DD_TStep}& 
+    \ddref{DD_TN}& \ddref{DD_TPrev}& \iref{IM_EV}& \iref{IM_CV}& 
+    \iref{IM_PV} & \iref{IM_ET}\\
 \hline
-\tref{T_COE}     & & & & & & & & & & & & & \\ \hline
-\tref{T_SHE}     & & & X& & & & & & & & & & \\ \hline
-\tref{T_LHE}     & & & & & & & & & & & & & \\ \hline
-\dref{NL}        & & & & & & & & & & & & & \\ \hline
-\dref{ROCT}      & X& & & & & & & & & & & & \\ \hline
-\ddref{FluxCoil} & & & & X& & & & & & & & & \\ \hline
-\ddref{FluxPCM}  & & & & X& & & & & & & & & \\ \hline
-\ddref{D_HOF}    & & & & & & & & & & & & & \\ \hline
-\ddref{D_MF}     & & & & & & & & X& & & & & \\ \hline
-\iref{ewat}      & & & & & X& X& X& & & & X& & \\ \hline
-\iref{epcm}      & & & & & X& & X& & X& X& & & X \\ \hline
-\iref{I_HWAT}    & & X& & & & & & & & & & & \\ \hline
-\iref{I_HPCM}    & & X& X& & & & X& X& X& & X& & \\
+\ddref{DD_SP}           & & & & & & & & & & & &\\ \hline
+\ddref{DD_Proportional} & & & & & & & & & & & &\\ \hline
+\ddref{DD_Integ}        & & & & & & & & & & & &\\ \hline
+\ddref{DD_Derivative}   & & & & & & & & & & & &\\ \hline
+\ddref{DD_TSim}         & & & & & & & & & & & &\\ \hline
+\ddref{DD_TStep}        & & & & & & & & & & & &\\ \hline
+\ddref{DD_TN}           & & & & & & & & & & & &\\ \hline
+\ddref{DD_TPrev}        & & & & & & &X & & & & &\\ \hline
+\iref{IM_EV}            &X & & & & & & & & & &X &\\ \hline
+\iref{IM_CV}            & &X &X &X & & & & &X & & &\\ \hline
+\iref{IM_PV}            & & & & & & & & & &X & &\\ \hline
+\iref{IM_ET}            & & & & & & &X &X & & & &\\ \hline
 \hline
 \end{tabular}
 \caption{Traceability Matrix Showing the Connections Between Items of Different Sections}
@@ -1124,40 +1490,63 @@ the assumptions.
 
 \begin{table}[h!]
 \centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
 \hline
-	& \iref{ewat}& \iref{epcm}& \iref{I_HWAT}& \iref{I_HPCM}& \ref{sec_DataConstraints}& \rref{R_RawInputs}& \rref{R_MassInputs} \\
+	& \iref{IM_EV}& \iref{IM_CV}& \iref{IM_PV}& \iref{IM_ET} & 
+    \rref{R_Inputs}& \rref{R_InputCheck}& \rref{R_Calculate}& 
+    \rref{R_SimTime}& \rref{R_Output}\\
 \hline
-\iref{ewat}            & & X& & & & X& X \\ \hline
-\iref{epcm}            & X& & & X& & X& X \\ \hline
-\iref{I_HWAT}          & & & & & & X& X \\ \hline
-\iref{I_HPCM}          & & X& & & & X& X \\ \hline
-\rref{R_RawInputs}     & & & & & & & \\ \hline
-\rref{R_MassInputs}    & & & & & & X& \\ \hline
-\rref{R_CheckInputs}   & & & & & X& & \\ \hline
-\rref{R_OutputInputs}  & X& X& & & & X& X \\ \hline
-\rref{R_TempWater}     & X& & & & & & \\ \hline 
-\rref{R_TempPCM}       & & X& & & & & \\ \hline
-\rref{R_EnergyWater}   & & & X& & & & \\ \hline
-\rref{R_EnergyPCM}     & & & & X& & & \\ \hline
-\rref{R_VerifyOutput}  & & & X& X& & & \\ \hline
-\rref{R_timeMeltBegin} & & X& & & & & \\ \hline
-\rref{R_timeMeltEnd}   & & X& & & & & \\ 
+\iref{IM_EV}           & & &X & & & & & & \\ \hline
+\iref{IM_CV}           &X & & & & & & & & \\ \hline
+\iref{IM_PV}           & &X & & & & & & & \\ \hline
+\iref{IM_ET}           & & & & & & & & & \\ \hline
+\rref{R_Inputs}        & & & & & & & & & \\ \hline
+\rref{R_InputCheck}    & & & & & & & & & \\ \hline
+\rref{R_Calculate}     &X &X &X &X & & & & & \\ \hline
+\rref{R_SimTime}       & & & & & & &X & & \\ \hline
+\rref{R_Output}        & & &X &X & & &X & & \\
 \hline
 \end{tabular}
 \caption{Traceability Matrix Showing the Connections Between Requirements and Instance Models}
 \label{Table:R_trace}
 \end{table}
 
-The purpose of the traceability graphs is also to provide easy references on
-what has to be additionally modified if a certain component is changed.  The
-arrows in the graphs represent dependencies. The component at the tail of an
-arrow is depended on by the component at the head of that arrow. Therefore, if a
-component is changed, the components that it points to should also be
-changed. Figure~\ref{Fig_ATrace} shows the dependencies of theoretical models,
-general definitions, data definitions, instance models, likely changes, and
-assumptions on each other. Figure~\ref{Fig_RTrace} shows the dependencies of
-instance models, requirements, and data constraints on each other.
+\begin{table}[h!]
+\centering
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+	& \ddref{DD_SP}& \ddref{DD_Proportional}& \ddref{DD_Integ}& 
+    \ddref{DD_Derivative}& \ddref{DD_TSim}& \ddref{DD_TStep}& 
+    \ddref{DD_TN} & \ddref{DD_TPrev} & \rref{R_Inputs}& 
+    \rref{R_InputCheck}& \rref{R_Calculate}& \rref{R_SimTime}& 
+    \rref{R_Output}\\
+\hline
+\ddref{DD_SP}               & & & & & & & & & & & & &\\ \hline
+\ddref{DD_Proportional}     & & & & & & & & & & & & &\\ \hline
+\ddref{DD_Integ}            & & & & & & & & & & & & &\\ \hline
+\ddref{DD_Derivative}       & & & & & & & & & & & & &\\ \hline
+\ddref{DD_TSim}             & & & & & & & & & & & & &\\ \hline
+\ddref{DD_TStep}            & & & & & & & & & & & & &\\ \hline
+\ddref{DD_TN}               & & & & & & & & & & & & &\\ \hline
+\ddref{DD_TPrev}            & & & & & & &X & & & & & &\\ \hline
+\rref{R_Inputs}             & & & & & & & & & & & & &\\ \hline
+\rref{R_InputCheck}         & & & & & & & & & & & & &\\ \hline
+\rref{R_Calculate}          & & & & & & & & & & & & &\\ \hline
+\rref{R_SimTime}            & & & & &X &X & & & & &X & &\\ \hline
+\rref{R_Output}             & & & & &X & & & & & &X & &\\
+\hline
+\end{tabular}
+\caption{Traceability Matrix Showing the Connections Between Requirements and 
+Data Definitions }
+\label{Table:R_DD_trace}
+\end{table}
+
+
+
+% Figure~\ref{Fig_ATrace} shows the dependencies of theoretical models,
+% general definitions, data definitions, instance models, likely changes, and
+% assumptions on each other. Figure~\ref{Fig_RTrace} shows the dependencies of
+% instance models, requirements, and data constraints on each other.
 
 % \begin{figure}[h!]
 % 	\begin{center}
@@ -1186,6 +1575,8 @@ instance models, requirements, and data constraints on each other.
 
 \plt{The definition of the requirements will likely call for SYMBOLIC\_CONSTANTS.
 Their values are defined in this section for easy maintenance.}
+
+No new constants were defined in this report.
 
 \newpage
 
