@@ -100,6 +100,15 @@ Simulation of a PID control loop.}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
 09-Oct-2020 & 1.0 & First draft of the SRS\\
+12-Oct-2020 & 1.1 & Addressed the following issues,
+\begin{itemize}
+\item Elaborated Intended reader and user characteristics.
+\item Fixed Physical system figure reference.
+\item Added reference to assumptions \aref{A_Attn} and \aref{A_Tuning}.
+\item Fixed assumption \aref{A_Initial}.
+\item Added explanation for system context.
+\item Added cross reference in assumptions for readability.
+\end{itemize}\\
 \bottomrule
 \end{tabularx}
 
@@ -362,7 +371,8 @@ and a Power Plant.
   graduate course on advanced quantum mechanics?}
 
 The reader of this document is assumed to have a prerequisite knowledge of 
-Control Systems at an undergraduate level, and high school calculus. 
+Control System (Control theory and controllers) at an undergraduate level 4
+engineering level, and knowledge of calculus at high school level. 
 
 \subsection{Organization of Document}
 
@@ -414,6 +424,10 @@ characteristics and lists the system constraints.  \plt{This text can likely be
   entities, besides the user.  For instance, when the software product is a
   library, the user will be another software program, not an actual end user.}
 
+Figure-\ref{Fig_SystemContext} shows the system context. A circle represents an external entity outside the software, the user in this case. A rectangle 
+represents the software system itself. Arrows are used to show the data show 
+between the system and its environment.
+
 \begin{figure}[h!]
 \begin{center}
  \includegraphics[width=0.7\textwidth]{SystemContextFigure}
@@ -425,6 +439,9 @@ characteristics and lists the system constraints.  \plt{This text can likely be
 \plt{For each of the entities in the system context diagram its responsibilities
   should be listed.  Whenever possible the system should check for data quality,
   but for some cases the user will need to assume that responsibility.}
+
+The PID controller is self-contained. The only external interaction is with the 
+user. The responsibilities of the user and the system are as follows,
 
 \begin{itemize}
 \item User Responsibilities:
@@ -450,8 +467,9 @@ characteristics and lists the system constraints.  \plt{This text can likely be
   end user of \progname{} should have an understanding of undergraduate Level 1
   Calculus and Physics.''}
   
-The end user of \progname{} should understand undergraduate Level 2 Control 
-Systems and High school Calculus.
+The end user of \progname{} should at the minimum have knowledge of Control 
+Systems at a second year undergraduate engineering level, and knowledge 
+of High school Calculus.
 
 \subsection{System Constraints}
 
@@ -540,7 +558,7 @@ and the Process Variable is computed.
   interactions between the elements and their physical environment; ii) the
   interactions between elements; and, iii) the initial or boundary conditions.}
 
-The physical system of a PID control loop, as shown in Figure-1,
+The physical system of a PID control loop, as shown in Figure-\ref{fig_PID_Control},
 includes the following elements:
 
 \begin{itemize}
@@ -561,7 +579,7 @@ includes the following elements:
 {
  \includegraphics[width=0.9\textwidth]{Fig_PIDController.png}
 }
-\caption{\label{<Label>} PID Control Loop}
+\caption{\label{fig_PID_Control} PID Control Loop}
 \end{center}
 \end{figure}
 
@@ -676,33 +694,39 @@ likely change [LC], in which the respective assumption is used.
     explicit (or implicit) ``and'' in the text of an assumption.}
 	
     Contrary to the real world, the Power Plant and the Sensor are coupled 
-    into a single system, with a response of $f(x) = \sqrt x$.
+    into a single system, with a response of $f(x) = \sqrt x$ [Ref By: 
+    \iref{IM_EV}, \lcref{LC_PP}].
 
 \item[A\refstepcounter{assumpnum}\theassumpnum \label{A_EQ}:] This program uses
- the decoupled form of the equation of the PID controller.
+ the decoupled form of the equation of the PID controller [Ref By: \iref{IM_CV}, 
+    \lcref{LC_EQ}].
 
 \item[A\refstepcounter{assumpnum}\theassumpnum \label{A_SP}:] The Set-Point is 
-a constant throughout the execution of the program.
+a constant throughout the execution of the program [Ref By: \ddref{DD_SP}, 
+    \lcref{LC_SP}].
 
 \item[A\refstepcounter{assumpnum}\theassumpnum \label{A_Attn}:] There are no 
-external disturbances to the Power plant during the simulation [\cite{PID_Wiki}].
+external disturbances to the Power plant during the simulation [\cite{PID_Wiki}]
+[Ref By: \iref{IM_PV}].
 
 \item[A\refstepcounter{assumpnum}\theassumpnum \label{A_Delay}:] There are no 
 delays in the signal propagation, other than the step time,
-during the simulation [\cite{PID_Wiki}].
+during the simulation [\cite{PID_Wiki}] [Ref By: \ddref{DD_TStep}].
 
 \item[A\refstepcounter{assumpnum}\theassumpnum \label{A_Domain}:] All analysis 
-are performed in the time domain.
+are performed in the time domain [Ref By: \lcref{LC_U_TD}].
 
 \item[A\refstepcounter{assumpnum}\theassumpnum \label{A_Tuning}:] This model 
-will be used for the Manual tuning of the control gains by the user.
+will be used for the Manual tuning of the control gains by the user 
+[Ref By: \ddref{DD_Proportional}, \ddref{DD_Integ}, \ddref{DD_Derivative}].
 
 \item[A\refstepcounter{assumpnum}\theassumpnum \label{A_Initial}:] The initial
-value (at the start of the simulation) of the Error Signal is assumed to be 
-zero.
+value (at the start of the simulation) of the Process Variable is assumed to be 
+zero [Ref By: \iref{IM_EV}, \lcref{LC_Initial}].
 
 \item[A\refstepcounter{assumpnum}\theassumpnum \label{A_Parallel}:] The Parallel
-form of equations is used for the PID controller.
+form of the equation is used for the PID controller 
+[Ref By: \iref{IM_CV}, \lcref{LC_U_Parallel}].
 
 \end{itemize}
 
@@ -779,6 +803,8 @@ Symbol &$SP$\\
   \hline
   Description & 
   The Set Point (SP) is the expected output that the control loop must achieve.
+  For this simulation, the set-point is assumed to be a constant throughout the 
+  simulation (\aref{A_SP}).
   \\
   \hline
   Source &
@@ -812,7 +838,8 @@ Symbol &$P$\\
   \hline
   Description & 
   The proportional term of the PID controller is the product of the input 
-  ($x(t)$) and the proportional gain $K_p$. 
+  ($x(t)$) and the proportional gain $K_p$. $K_p$ is tuned by the user
+  (\aref{A_Tuning}).
   \\
   \hline
   Source &
@@ -845,7 +872,8 @@ Symbol &$I$\\
   \hline
   Description & 
   The integral term of the PID controller is a product of the accumulated input 
-  over time and the integral gain $K_i$.
+  over time and the integral gain $K_i$. $K_i$ is tuned by the user
+  (\aref{A_Tuning}).
   \\
   \hline
   Source &
@@ -878,7 +906,8 @@ Symbol &$D$\\
   \hline
   Description & 
   The derivative term of the PID controller is a product of the rate of change
-  of the input and the derivative constant $K_d$.
+  of the input and the derivative constant $K_d$. $K_d$ is tuned by the user
+  (\aref{A_Tuning}).
   \\
   \hline
   Source &
@@ -1091,7 +1120,9 @@ identified in Sections~\ref{sec_theoretical} and~\ref{sec_gendef}.
   Description & The Control Variable, $u(t)$ is the output of the PID controller.
   The Control Variable is the sum of the  present (Proportional), past (Integral) 
   and future (Derivative) values of the error. The control variable is 
-  calculated at each step of the simulation.\\
+  calculated at each step of the simulation. The equation used for the PID 
+  controller is parallel (\aref{A_Parallel}), that is, the P,I,D components are parallel to each other, and de-coupled (\aref{A_EQ}), that is the gains of 
+  the P, I, D component are not inter-dependent.\\
   \hline
   Sources& 
   \cite{PID_Control} \\
@@ -1136,7 +1167,8 @@ d\mathrm{T}$ + $K_d$ . $\frac{d(e(t))}{dt}$
   \hline
   Description & The Process Variable is the output of the power plant 
   (\aref{A_PP}). The Process Variable is calculated at each step of the 
-  simulation.\\
+  simulation. Additionally, it is assumed that the the power plant does 
+  not have any external disturbances (\aref{A_Attn}).\\
   \hline
   Sources& 
   - \\
@@ -1376,7 +1408,7 @@ shall meet the properties of correct solution specified in
     PID controller could be changed to industrial form (\aref{A_EQ}).
     
 \item[LC\refstepcounter{lcnum}\thelcnum\label{LC_Initial}:] A non-zero value
-    of error signal could be used at the start of the simulation 
+    of process variable could be used at the start of the simulation 
     (\aref{A_Initial}).
     
 \item[LC\refstepcounter{lcnum}\thelcnum\label{LC_SP}:] The Set Point could be 
@@ -1435,24 +1467,24 @@ changed.
 	& \aref{A_PP} & \aref{A_EQ} & \aref{A_SP} & \aref{A_Attn} & \aref{A_Delay} & 
       \aref{A_Domain}& \aref{A_Tuning} & \aref{A_Initial} & \aref{A_Parallel} \\
 \hline
-\ddref{DD_SP}           & & & & & & & & &\\ \hline
-\ddref{DD_Proportional} & & & & & & & & &\\ \hline
-\ddref{DD_Integ}        & & & & & & & & &\\ \hline
-\ddref{DD_Derivative}   & & & & & & & & &\\ \hline
+\ddref{DD_SP}           & & &X & & & & & &\\ \hline
+\ddref{DD_Proportional} & & & & & & &X & &\\ \hline
+\ddref{DD_Integ}        & & & & & & &X & &\\ \hline
+\ddref{DD_Derivative}   & & & & & & &X & &\\ \hline
 \ddref{DD_TSim}         & & & & & & & & &\\ \hline
 \ddref{DD_TStep}        & & & & &X & & & &\\ \hline
 \ddref{DD_TN}           & & & & & & & & &\\ \hline
 \ddref{DD_TPrev}        & & & & & & & & &\\ \hline
 \iref{IM_EV}            & & & & & & & &X &\\ \hline
-\iref{IM_CV}            & & & & & & & & &\\ \hline
-\iref{IM_PV}            &X & & & & & & & &\\ \hline
+\iref{IM_CV}            & &X & & & & & & &X\\ \hline
+\iref{IM_PV}            &X & & &X & & & & &\\ \hline
 \iref{IM_ET}            & & & & & & & & &\\ \hline
 \lcref{LC_PP}           &X & & & & & & & &\\ \hline
 \lcref{LC_EQ}           & &X & & & & & & &\\ \hline
 \lcref{LC_Initial}      & & & & & & & &X &\\ \hline
 \lcref{LC_SP}           & & &X & & & & & &\\ \hline
 \lcref{LC_U_TD}         & & & & & &X & & &\\ \hline
-\lcref{LC_U_Parallel}      & & & & & & & & &X\\
+\lcref{LC_U_Parallel}   & & & & & & & & &X\\
 \hline
 \end{tabular}
 \caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
