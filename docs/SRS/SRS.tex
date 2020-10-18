@@ -109,6 +109,15 @@ Simulation of a PID control loop.}
 \item Added explanation for system context.
 \item Added cross reference in assumptions for readability.
 \end{itemize}\\
+19-Oct-2020 & 1.2 & Addressed the following issues,
+\begin{itemize}
+\item Updated the properties of correct solution and removed the corresponding
+non-functional requirement.
+\item Rephrased Intended reader characteristics, \ddref{DD_TStep} and goal statements for
+clarity.
+\item Added time-domain analysis to the scope.
+\item Fixed typographical errors.
+\end{itemize}\\
 \bottomrule
 \end{tabularx}
 
@@ -159,13 +168,11 @@ description of the unit and the SI name.
 \subsection{Table of Symbols}
 
 The table that follows summarizes the symbols used in this document along with
-their units.  The choice of symbols was made to be consistent with the heat
-transfer literature and with existing documentation for solar water heating
-systems.  The symbols are listed in alphabetical order.
+their units. The symbols are listed in alphabetical order.
 
 \renewcommand{\arraystretch}{1.2}
 %\noindent \begin{tabularx}{1.0\textwidth}{l l X}
-\noindent \begin{longtable*}{l l p{12cm}} \toprule
+\noindent \begin{longtable*}{l l p{9cm}} \toprule
 \textbf{symbol} & \textbf{unit} & \textbf{description}\\
 \midrule
 $e(t)$ & Mathematical value (dimensionless) & Error Signal at time t
@@ -190,6 +197,8 @@ $t_\text{step}$ & \si[per-mode=symbol] {\second} & Simulation step time
 \\
 $u(t)$ & Mathematical value (dimensionless) & Control Variable at time t
 \\
+$x(t)$ & Mathematical value (dimensionless) & Generic input signal at time t
+\\
 $y(t)$ & Mathematical value (dimensionless) & Process Variable at time t
 \\ 
 \bottomrule
@@ -209,7 +218,7 @@ $y(t)$ & Mathematical value (dimensionless) & Process Variable at time t
   CV & Control Variable\\
   D & Derivative term of the PID controller\\
   DD & Data Definition\\
-  etc & Et cetra\\
+  etc & Et cetera\\
   GD & General Definition\\
   GS & Goal Statement\\
   I & Integral term of the PID controller\\
@@ -217,7 +226,6 @@ $y(t)$ & Mathematical value (dimensionless) & Process Variable at time t
   LC & Likely Change\\
   P & Proportional term of the PID controller\\
   PID & Proportional Integral Derivative\\
-  \progname{} & Proportional Integral Derivative Controller\\
   PS & Physical System Description\\
   PV & Process Variable\\
   R & Requirement\\
@@ -349,9 +357,10 @@ software and test procedures.
   on the ``big picture'' assumptions.  The assumptions section lists, and
   describes, all of the assumptions.}
   
-The scope of the requirements is limited to the simulation of a closed control 
-loop control system with three subsystems, namely, a Summer, a PID controller 
-and a Power Plant.
+The scope of the requirements is limited to the simulation of a closed
+loop control system with three subsystems, namely, a Summing point, a PID 
+controller and a Power Plant. All the analysis in this application are in the 
+time domain.
 
 \subsection{Characteristics of Intended Reader} \label{sec_IntendedReader}
 
@@ -371,7 +380,7 @@ and a Power Plant.
   graduate course on advanced quantum mechanics?}
 
 The reader of this document is assumed to have a prerequisite knowledge of 
-Control System (Control theory and controllers) at an undergraduate level 4
+Control System (Control theory and controllers) at a fourth year undergraduate 
 engineering level, and knowledge of calculus at high school level. 
 
 \subsection{Organization of Document}
@@ -381,7 +390,7 @@ engineering level, and knowledge of calculus at high school level.
   select which sections they want to read, and in what order.  This section will
   be similar between project.}
 
-The sections in this document is are based on \citet{SmithAndLai2005, 
+The sections in this document are based on \citet{SmithAndLai2005, 
 SmithEtAl2007}. Subsequent sections of this document will breakdown and present 
 the problem in a less abstract manner than the previous section. 
 For example, the context for the mathematical equations required to solve the 
@@ -424,9 +433,9 @@ characteristics and lists the system constraints.  \plt{This text can likely be
   entities, besides the user.  For instance, when the software product is a
   library, the user will be another software program, not an actual end user.}
 
-Figure-\ref{Fig_SystemContext} shows the system context. A circle represents an external entity outside the software, the user in this case. A rectangle 
-represents the software system itself. Arrows are used to show the data show 
-between the system and its environment.
+Figure-\ref{Fig_SystemContext} shows the system context. The circle represents an external entity outside the software, the user in this case. The rectangle 
+represents the software system itself, the PID Control Loop in this case. 
+Arrows are used to show the data show between the system and its environment.
 
 \begin{figure}[h!]
 \begin{center}
@@ -444,6 +453,7 @@ The PID controller is self-contained. The only external interaction is with the
 user. The responsibilities of the user and the system are as follows,
 
 \begin{itemize}
+\label{sec_User_Responsibilities}
 \item User Responsibilities:
 \begin{itemize}
 \item Feed inputs to the model.
@@ -528,11 +538,14 @@ difference between the Set Point and the Process Variable.
 \item [Elapsed Time:] Time elapsed between subsequent iterations of the control
 loop.
 
+\item [PID Control Loop:] Closed loop control system with PID Controller, 
+Summing Point and Power Plant.
+
 \item [Power Plant:] The system to be controlled. 
 
 \item [Process Variable:] The output value from the power plant.
 
-\item [Set-Point:] The desired value that the control system much reach.
+\item [Set-Point:] The desired value that the control system must reach.
 
 \item [Simulation Time:] Total execution time of the application.
 
@@ -608,10 +621,10 @@ Total Simulation time and Step Time, the goal statements are:
 % output of the PID-controller at every step.
 
 \item[GS\refstepcounter{goalnum}\thegoalnum \label{G_PV}:] Compute the 
-output of the Power-Plant at every step.
+output (Process Variable) of the Power-Plant at every step.
 
 \item[GS\refstepcounter{goalnum}\thegoalnum \label{G_ET}:] Calculate the 
-elapsed time at every step.
+elapsed time of the application at every step.
 
 \end{itemize}
 
@@ -694,7 +707,7 @@ likely change [LC], in which the respective assumption is used.
     explicit (or implicit) ``and'' in the text of an assumption.}
 	
     Contrary to the real world, the Power Plant and the Sensor are coupled 
-    into a single system, with a response of $f(x) = \sqrt x$ [Ref By: 
+    into a single system, with a response of $f(x) = \sqrt{x}$ [Ref By: 
     \iref{IM_EV}, \lcref{LC_PP}].
 
 \item[A\refstepcounter{assumpnum}\theassumpnum \label{A_EQ}:] This program uses
@@ -712,9 +725,6 @@ external disturbances to the Power plant during the simulation [\cite{PID_Wiki}]
 \item[A\refstepcounter{assumpnum}\theassumpnum \label{A_Delay}:] There are no 
 delays in the signal propagation, other than the step time,
 during the simulation [\cite{PID_Wiki}] [Ref By: \ddref{DD_TStep}].
-
-\item[A\refstepcounter{assumpnum}\theassumpnum \label{A_Domain}:] All analysis 
-are performed in the time domain [Ref By: \lcref{LC_U_TD}].
 
 \item[A\refstepcounter{assumpnum}\theassumpnum \label{A_Tuning}:] This model 
 will be used for the Manual tuning of the control gains by the user 
@@ -868,7 +878,7 @@ Symbol &$I$\\
 % \hline
   SI Units & -\\
   \hline
-  Equation& $I$ = $K_i$ . $\int_{0}^{t} x(\mathrm{T}) d\mathrm{T}$ \\
+  Equation& $I$ = $K_i$ . $\int_{0}^{t} x(\tau) d\tau $ \\
   \hline
   Description & 
   The integral term of the PID controller is a product of the accumulated input 
@@ -939,7 +949,7 @@ Symbol &$T_\text{sim}$\\
   Equation& - \\
   \hline
   Description & 
-  $T_\text{sim}$ is the total time that the control loop must execute. This is
+  $T_\text{sim}$ is the total time that the control loop must execute. This
   is required to terminate the execution in case the Power-Plant is in an 
   unstable state (oscillation).
   \\
@@ -974,8 +984,7 @@ Symbol &$t_\text{step}$\\
   \hline
   Description & 
   $t_\text{step}$ is a time between consecutive iterations of the control loop.
-  This is equivalent to the total time taken for the response of the system 
-  (\aref{A_Delay}).
+  This is equivalent to the sum of all the delays (from Controller, Power-Plant and sensor) in the real world (\aref{A_Delay}).
   \\
   \hline
   Source &
@@ -1115,7 +1124,7 @@ identified in Sections~\ref{sec_theoretical} and~\ref{sec_gendef}.
   Input& $e(t)$ (\iref{IM_EV})\\
   \hline
   Output & $u(t)$, such that $u(t)$ = $K_p$ . $e(t)$ +  $K_i$ . $\int_{0}^{t} 
-  e(\mathrm{T}) d\mathrm{T}$ + $K_d$ . $\frac{d(e(t))}{dt}$ \\
+  e(\tau) d\tau$ + $K_d$ . $\frac{d(e(t))}{dt}$ \\
   \hline
   Description & The Control Variable, $u(t)$ is the output of the PID controller.
   The Control Variable is the sum of the  present (Proportional), past (Integral) 
@@ -1144,8 +1153,8 @@ Control Variable = Proportional term (from \ddref{DD_Proportional}) + Integral t
 Therefore, given the input, $e(t)$ (from \iref{IM_EV}), the Control Variable,
 $u(t)$ is,
 
-~\newline $u(t)$ = $K_p$ . $e(t)$ +  $K_i$ . $\int_{0}^{t} e(\mathrm{T}) 
-d\mathrm{T}$ + $K_d$ . $\frac{d(e(t))}{dt}$
+~\newline $u(t)$ = $K_p$ . $e(t)$ +  $K_i$ . $\int_{0}^{t} e(\tau) 
+d\tau$ + $K_d$ . $\frac{d(e(t))}{dt}$
 
 
 ~\newline
@@ -1163,7 +1172,7 @@ d\mathrm{T}$ + $K_d$ . $\frac{d(e(t))}{dt}$
   \hline
   Input& $u(t)$ (from \iref{IM_CV})\\
   \hline
-  Output & $y(t)$, such that $y(t) = \sqrt u(t)$.\\
+  Output & $y(t)$, such that $y(t) = \sqrt{u(t)}$.\\
   \hline
   Description & The Process Variable is the output of the power plant 
   (\aref{A_PP}). The Process Variable is calculated at each step of the 
@@ -1291,8 +1300,10 @@ point of $SP_{\text{min}}$ and $SP_{\text{max}}$ may help with tuning.
 \subsubsection{Properties of a Correct Solution} \label{sec_CorrectSolution}
 
 \noindent
-The output response of the power plant must be stable (without oscillation) and 
-must reach the Set-Point.
+The output of this program will help the user to calibrate the right values for 
+the PID gain constants. Therefore it is the user's responsibility (see 
+\ref{sec_User_Responsibilities}) to adjudge the correct system response. For the right values of the PID gains, the response of the Power-Plant will be stable and 
+the Process Variable will reach the Set-Point.
 
 \plt{fill in the details.}  \plt{These
   properties are in addition to the stated requirements.  There is no need to
@@ -1389,10 +1400,6 @@ code shall be thoroughly documented with Design Specifications and User Guides.
 \item[NFR\refstepcounter{nfreqnum}\thenfreqnum \label{R_Verifiable}:] The code
 shall be verifiable against a Verification and Validation plan.
 
-\item[NFR\refstepcounter{nfreqnum}\thenfreqnum \label{R_Correctness}:] The code
-shall meet the properties of correct solution specified in 
-\ref{sec_CorrectSolution}.
-
 \end{itemize}
 
 \section{Likely Changes}    
@@ -1419,12 +1426,7 @@ shall meet the properties of correct solution specified in
 \section{Unlikely Changes}    
 
 \noindent \begin{itemize}
-
-\item[LC\refstepcounter{lcnum}\thelcnum\label{LC_U_TD}:] \plt{Give
-    the unlikely changes.  The design can assume that the changes listed will
-    not occur.} The time domain analysis of a PID controller is unlikely to 
-    change (\aref{A_Domain}).
-    
+ 
 \item[LC\refstepcounter{lcnum}\thelcnum\label{LC_U_Parallel}:] \plt{Give
     the unlikely changes.  The design can assume that the changes listed will
     not occur.} The parallel form of equation for PID controller is 
@@ -1462,29 +1464,28 @@ changed.
 \begin{landscape}
 \begin{table}[h!]
 \centering
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
 \hline
 	& \aref{A_PP} & \aref{A_EQ} & \aref{A_SP} & \aref{A_Attn} & \aref{A_Delay} & 
-      \aref{A_Domain}& \aref{A_Tuning} & \aref{A_Initial} & \aref{A_Parallel} \\
+      \aref{A_Tuning} & \aref{A_Initial} & \aref{A_Parallel} \\
 \hline
-\ddref{DD_SP}           & & &X & & & & & &\\ \hline
-\ddref{DD_Proportional} & & & & & & &X & &\\ \hline
-\ddref{DD_Integ}        & & & & & & &X & &\\ \hline
-\ddref{DD_Derivative}   & & & & & & &X & &\\ \hline
-\ddref{DD_TSim}         & & & & & & & & &\\ \hline
-\ddref{DD_TStep}        & & & & &X & & & &\\ \hline
-\ddref{DD_TN}           & & & & & & & & &\\ \hline
-\ddref{DD_TPrev}        & & & & & & & & &\\ \hline
-\iref{IM_EV}            & & & & & & & &X &\\ \hline
-\iref{IM_CV}            & &X & & & & & & &X\\ \hline
-\iref{IM_PV}            &X & & &X & & & & &\\ \hline
-\iref{IM_ET}            & & & & & & & & &\\ \hline
-\lcref{LC_PP}           &X & & & & & & & &\\ \hline
-\lcref{LC_EQ}           & &X & & & & & & &\\ \hline
-\lcref{LC_Initial}      & & & & & & & &X &\\ \hline
-\lcref{LC_SP}           & & &X & & & & & &\\ \hline
-\lcref{LC_U_TD}         & & & & & &X & & &\\ \hline
-\lcref{LC_U_Parallel}   & & & & & & & & &X\\
+\ddref{DD_SP}           & & &X & & & & &\\ \hline
+\ddref{DD_Proportional} & & & & & &X & &\\ \hline
+\ddref{DD_Integ}        & & & & & &X & &\\ \hline
+\ddref{DD_Derivative}   & & & & & &X & &\\ \hline
+\ddref{DD_TSim}         & & & & & & & &\\ \hline
+\ddref{DD_TStep}        & & & & &X & & &\\ \hline
+\ddref{DD_TN}           & & & & & & & &\\ \hline
+\ddref{DD_TPrev}        & & & & & & & &\\ \hline
+\iref{IM_EV}            & & & & & & &X &\\ \hline
+\iref{IM_CV}            & &X & & & & & &X\\ \hline
+\iref{IM_PV}            &X & & &X & & & &\\ \hline
+\iref{IM_ET}            & & & & & & & &\\ \hline
+\lcref{LC_PP}           &X & & & & & & &\\ \hline
+\lcref{LC_EQ}           & &X & & & & & &\\ \hline
+\lcref{LC_Initial}      & & & & & & &X &\\ \hline
+\lcref{LC_SP}           & & &X & & & & &\\ \hline
+\lcref{LC_U_Parallel}   & & & & & & & &X\\
 \hline
 \end{tabular}
 \caption{Traceability Matrix Showing the Connections Between Assumptions and Other Items}
