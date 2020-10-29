@@ -1377,28 +1377,27 @@ qualities that the software is expected to exhibit.
 
 \noindent \begin{itemize}
 
-\item[NFR\refstepcounter{nfreqnum}\thenfreqnum \label{R_Portability}:] The code
-shall be portable across multiple Operating Systems platforms.
+\item[NFR\refstepcounter{nfreqnum}\thenfreqnum \label{R_Portability}:] Probability:
+ The code shall be portable to multiple Operating Systems.
 
-\item[NFR\refstepcounter{nfreqnum}\thenfreqnum \label{R_Usability1}:] The code
-shall be importable as a module by another program. 
+\item[NFR\refstepcounter{nfreqnum}\thenfreqnum \label{R_Modularity}:] Modularity:
+The code shall be modular such that this program can be imported as a library
+by another program. 
 
-\item[NFR\refstepcounter{nfreqnum}\thenfreqnum \label{R_Security1}:] The code 
-shall protect the inputs against unconventional input values from users. 
-Unconventional in this context refers to a value of a different type, or 
-unexpectedly large or small values. 
+\item[NFR\refstepcounter{nfreqnum}\thenfreqnum \label{R_Security}:] Security:
+The code shall be immune to common security problems such as memory leaks,
+divide by zero errors, and the square root of negative numbers.
 
-\item[NFR\refstepcounter{nfreqnum}\thenfreqnum \label{R_Security2}:] The 
-application shall be void of memory leaks.
+\item[NFR\refstepcounter{nfreqnum}\thenfreqnum \label{R_Maintainability}:] Maintainability:
+The code shall be thoroughly documented with appropriate User Guides.
 
-\item[NFR\refstepcounter{nfreqnum}\thenfreqnum \label{R_Security3}:] The 
-application shall have protection for divide-by-zero error.
+\item[NFR\refstepcounter{nfreqnum}\thenfreqnum \label{R_Verifiable}:] Verifiability: 
+The code shall be verifiable against a Verification and Validation plan.
 
-\item[NFR\refstepcounter{nfreqnum}\thenfreqnum \label{R_Maintainability}:] The 
-code shall be thoroughly documented with Design Specifications and User Guides.
+\item[NFR\refstepcounter{nfreqnum}\thenfreqnum \label{R_Quality}:] Quality: The code
+shall be written with high-quality standards. The code should adhere to good coding 
+standards and should not contain any dead, or unreachable statements.
 
-\item[NFR\refstepcounter{nfreqnum}\thenfreqnum \label{R_Verifiable}:] The code
-shall be verifiable against a Verification and Validation plan.
 
 \end{itemize}
 
