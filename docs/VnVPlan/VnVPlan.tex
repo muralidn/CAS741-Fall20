@@ -3,6 +3,26 @@
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
+
+
+\usepackage{amsmath, mathtools}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{colortbl}
+\usepackage{xr}
+\usepackage{hyperref}
+\usepackage{longtable}
+\usepackage{xfrac}
+\usepackage{float}
+\usepackage{siunitx}
+\usepackage{pdflscape}
+\usepackage{afterpage}
+
+\usepackage{longtable}
+\usepackage{caption}
+\usepackage{enumitem}
+
 \hypersetup{
     colorlinks,
     citecolor=blue,
@@ -10,15 +30,15 @@
     linkcolor=red,
     urlcolor=blue
 }
-\usepackage[round]{natbib}
+\usepackage[square,numbers]{natbib}
 
 \input{../Comments}
 \input{../Common}
 
 \begin{document}
 
-\title{Project Title: System Verification and Validation Plan for \progname{}} 
-\author{Author Name}
+\title{System Verification and Validation Plan for \progname{}} 
+\author{Naveen Ganesh Muralidharan}
 \date{\today}
 	
 \maketitle
@@ -30,8 +50,7 @@
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-Date 1 & 1.0 & Notes\\
-Date 2 & 1.1 & Notes\\
+28-Oct-20 1 & 1.0 & The first draft of the VnV plan\\
 \bottomrule
 \end{tabularx}
 
@@ -45,25 +64,43 @@ Date 2 & 1.1 & Notes\\
 
 \newpage
 
-\section{Symbols, Abbreviations and Acronyms}
+\section{Symbols, Abbreviations, and Acronyms}
 
 \renewcommand{\arraystretch}{1.2}
 \begin{tabular}{l l} 
   \toprule		
   \textbf{symbol} & \textbf{description}\\
   \midrule 
+  API & Application Program Interface\\
+  N & No\\
+  stdin & Standard input stream\\
+  stderr & Standard error stream\\
+  stdout & Standard output stream\\
   T & Test\\
+  X & Don't Care\\
+  VnV & Verification and Validation\\
+  Y & Yes\\
   \bottomrule
 \end{tabular}\\
 
 \wss{symbols, abbreviations or acronyms -- you can simply reference the SRS
   \citep{SRS} tables, if appropriate}
 
+All the units, abbreviations, and symbols recorded in the Software Requirement 
+Specification \cite{SRS} apply to this document as well.
+
 \newpage
 
 \pagenumbering{arabic}
 
-This document ... \wss{provide an introductory blurb and roadmap of the
+This document encompasses the Verification and Validation (VnV) plan for the
+\progname{} software. 
+
+Section 3 of this document sets the context for the VnV plan. Section 4  provides
+a high-level overview of the Vnv plan. Sections 5 and 6 contain the systems and 
+unit test cases respectively. 
+
+\wss{provide an introductory blurb and roadmap of the
   Verification and Validation plan}
 
 \section{General Information}
@@ -73,6 +110,16 @@ This document ... \wss{provide an introductory blurb and roadmap of the
 \wss{Say what software is being tested.  Give its name and a brief overview of
   its general functions.}
 
+The software under test is the simulation of a PID control loop. The functions of 
+the PID control loop are,
+
+\begin{itemize}
+\item Calculating the Error Signal. Error Signal is the difference between the User 
+Input (Set-Point) and the output of the Power Plant (Process-Variable).
+\item Computing the output of the PID Controller.
+\item Computing the response of the Power-Plant.
+\end{itemize}
+
 \subsection{Objectives}
 
 \wss{State what is intended to be accomplished.  The objective will be around
@@ -80,13 +127,25 @@ This document ... \wss{provide an introductory blurb and roadmap of the
   something like: ``build confidence in the software correctness,''
   ``demonstrate adequate usability.'' etc.  You won't list all of the qualities,
   just those that are most important.}
+  
+The objectives of the Verification and Validation procedures are to,
+
+\begin{itemize}
+\item Establish confidence in software correctness.
+\item Ensuring that the software meets the expected quality standards.
+\item Ensuring that the software is robust.
+\end{itemize}
 
 \subsection{Relevant Documentation}
 
 \wss{Reference relevant documentation.  This will definitely include your SRS
   and your other project documents (MG, MIS, etc)}
 
-\citet{SRS}
+The requirements for the PID Controller software are captured in the Software
+Requirements Specification \cite{SRS}.. 
+
+The software design information are captured in the Module Guide  \cite{MG}
+and Module Interface Specification \cite{MIS} documents respectively.
 
 \section{Plan}
 	
@@ -94,26 +153,56 @@ This document ... \wss{provide an introductory blurb and roadmap of the
 
 \wss{You, your classmates and the course instructor.  Maybe your supervisor.}
 
+The members of the VnV team for this project are,
+
+\begin{itemize}
+\item Naveen Ganesh Muralidharan
+\item Dr. Spencer Smith
+\item Ting-Yu Wu	
+\item Siddharth (Sid) Shinde
+\item Gabriela Sánchez Díaz	
+\item Seyed Parsa Tayefeh (Parsa) Morsal
+\end{itemize}
+
 \subsection{SRS Verification Plan}
 
 \wss{List any approaches you intend to use for SRS verification.  This may just
   be ad hoc feedback from reviewers, like your classmates, or you may have
   something more rigorous/systematic in mind..}
-
+  
+The SRS will be independently peer-reviewed by members of the VnV team, specifically,
+Dr. Spencer Smith, Ting-Yu Wu, and Siddharth (Sid) Shinde.
+ 
+Any issues identified during the review are tracked and verified in Github \cite{Github}.
+ 
 \subsection{Design Verification Plan}
 
 \wss{Plans for design verification}
+
+The software for this project is auto-generated by the Drasil Software \cite{Drasil}. Therefore
+manual verification of the design is not required.
 
 \subsection{Implementation Verification Plan}
 
 \wss{You should at least point to the tests listed in this document and the unit
   testing plan.}
+  
+The implemented software is tested as follows,
+
+\begin{itemize}
+\item Automated systems testing, where the corresponding test cases
+are listed in section \ref{sec_systems_tests}. 
+\item Automated unit testing, where the corresponding test cases are
+listed in section \ref{sec_unit_tests}. 
+\item Statement coverage check. 
+\item Static code analysis.
+\end{itemize}
 
 \wss{In this section you would also give any details of any plans for static verification of
-  the implementation.  Potential techniques include code walkthroughs, code
+  the implementation.  Potential techniques include code walk throughs, code
   inspection, static analyzers, etc.}
 
-\subsection{Automated Testing and Verification Tools}
+\subsection{Automated Testing and Verification Tools} \label{sec_Tools}
 
 \wss{What tools are you using for automated testing.  Likely a unit testing
   framework and maybe a profiling tool, like ValGrind.  Other possible tools
@@ -126,13 +215,39 @@ This document ... \wss{provide an introductory blurb and roadmap of the
 \wss{The details of this section will likely evolve as you get closer to the
   implementation.}
 
+The tools utilized for verification are listed below,
+
+\begin{itemize}
+\item Systems Testing - Pytest \cite{Pytest} will be used for automated systems
+testing. Since this  is a blackbox test, Pytest will be used at the stdin, stdout, and
+stderr levels.
+
+\item Unit Testing - Pytest \cite{Pytest} will be used for automated unit testing.
+ Since this is a whitebox test, Pytest will be used at the API level.
+
+\item Statement coverage-Pycharm \cite{Pycharm}. Pycharm automatically tracks
+ the statement coverage upon the execution of systems test scripts.
+
+\item Memory leaks - Valgrind \cite{Valgrind}.
+
+\item Static Analysis - PyCharm \cite{Pycharm}. Static analysis includes checks for linting,
+coding standards, etc.
+
+\end{itemize}
+
 \subsection{Software Validation Plan}
 
 \wss{If there is any external data that can be used for validation, you should
   point to it here.  If there are no plans for validation, you should state that
   here.}
 
-\section{System Test Description}
+The pseudo-oracle method is used for the validation of the software requirements.
+The PID gains are calibrated with a free simulation model \cite{Free_PID} of the 
+PID controller. The calibrated gains are then supplied as inputs to the Software 
+Under Test, and the outputs of the two software are compared to validate 
+the requirements.
+
+\section{System Test Description} \label{sec_systems_tests}
 	
 \subsection{Tests for Functional Requirements}
 
@@ -140,52 +255,213 @@ This document ... \wss{provide an introductory blurb and roadmap of the
   different areas.  If there are no identifiable subsets for the tests, this
   level of document structure can be removed.}
 
+This section contains the systems test cases for the functional requirements in the
+SRS \cite{SRS}. The test cases are organized into two categories, the input-output 
+tests and simulation parameters test.
+
 \wss{Include a blurb here to explain why the subsections below
   cover the requirements.  References to the SRS would be good.}
 
-\subsubsection{Area of Testing1}
+\subsubsection{Input Output tests}
 
 \wss{It would be nice to have a blurb here to explain why the subsections below
   cover the requirements.  References to the SRS would be good.  If a section
   covers tests for input constraints, you should reference the data constraints
   table in the SRS.}
+  
+This section verifies section 4.2.6, and requirements R1 and R2 of section 5.1
+in the SRS \cite {SRS}. Various inputs are provided to the Software Under Test, 
+and the output is verified. 
 		
-\paragraph{Title for Test}
+\paragraph{Input Constraints test}
 
-\begin{enumerate}
+\begin{table}[]
+\caption{TC-PID-1}
+\label{tbltc001}
+\begin{tabular}{@{}lccccccccc@{}}
+\toprule
+\multicolumn{1}{l|}{}   & \multicolumn{6}{c|}{Input}  & \multicolumn{3}{c}{Output}\\     
+\midrule \multicolumn{1}{c|}{ID} & $SP$ & $K_p$ & $K_i$ & $K_d$ & $T_\text{sim}$ (s)
+ & \multicolumn{1}{c|}{$t_\text{step}$ (s)} & $y(t)$ & $T_\text{elapsed} (s)$ & Error
+message \\ \midrule
+TC-PID-1-1 & 5    & 1     & 1     & 0     & 10    & 0.01 & 4.1   & 10    & N\\
+TC-PID-1-2 & 0    & 1     & 1     & 0     & 10    & 0.01 & None & None & Y\\
+TC-PID-1-3 & 30.1 & 1     & 1     & 0     & 10    & 0.01 & None & None & Y \\
+TC-PID-1-4 & 5    & -0.01 & 1     & 0     & 10    & 0.01 & None & None & Y \\
+TC-PID-1-5 & 5    & 10.1  & 1     & 0     & 10    & 0.01 & None & None & Y \\
+TC-PID-1-6 & 5    & 1     & -0.01 & 0     & 10    & 0.01 & None & None & Y \\
+TC-PID-1-7 & 5    & 1     & 10.1  & 0     & 10    & 0.01 & None & None & Y \\
+TC-PID-1-8 & 5    & 1     & 1     & -0.01 & 10    & 0.01 & None & None & Y \\
+TC-PID-1-9 & 5    & 1     & 1     & 10.1  & 10    & 0.01 & None & None & Y \\
+TC-PID-1-10 & 5    & 1     & 1     & 0     & 0     & 0.01 & None & None & Y \\
+TC-PID-1-11 & 5    & 1     & 1     & 0     & 120.1 & 0.01 & None & None & Y \\
+TC-PID-1-12 & 5    & 1     & 1     & 0     & 10    & 0    & None & None & Y \\
+TC-PID-1-13 & 5    & 1     & 1     & 0     & 10    & 1.1  & None & None & Y \\ \bottomrule
+\end{tabular}
+\end{table}
 
-\item{test-id1\\}
+\begin{itemize}
+\item{TC-PID-1\\}
+\begin{itemize}
 
-Control: Manual versus Automatic
+\item{\textbf{Control:}} Automatic
 					
-Initial State: 
+\item{\textbf{Initial State:}} None
 					
-Input: 
+\item{\textbf{Input:}} Set all inputs of the software to the values specified in the 
+`Input' columns in Table-\ref{tbltc001}.
 					
-Output: \wss{The expected result for the given inputs}
+\item{\textbf{Output:}}  Verify that all the outputs of the software match the 
+values specified in the `Output' columns of Table-\ref{tbltc001}.
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+\wss{The expected result for the given inputs}
+
+\item{\textbf{Requirement ID(s):}}  R1, R2, R3, R4, R5.
+
+\item{\textbf{Test Case Derivation:}}  This test case is to test the behavior of the system 
+when the system is supplied with inputs that are out of range. The system should either
+produce an output or an error message. 
+
+For test cases with output, a relative error of 10\% is applied to accommodate rounding off errors,
+and floating point representation errors.
+
+\wss{Justify the expected value given in the Output field}
 					
-How test will be performed: 
+\item{\textbf{How test will be performed:}}  The test will be automated with Pytest as mentioned in 
+section \ref{sec_Tools}. 
 					
-\item{test-id2\\}
+\end{itemize}
+\end{itemize}
 
-Control: Manual versus Automatic
+\paragraph{Output test}
+
+\begin{itemize}
+\item{TC-PID-2\\}
+\begin{itemize}
+
+\item{\textbf{Control:}} Automatic
 					
-Initial State: 
+\item{\textbf{Initial State:}} None
+
+\item{\textbf{Requirement ID(s):}}  R1, R2, R3, R4, R5.
 					
-Input: 
+\item{\textbf{Input:}} Set the inputs to the software as follows,
+
+$SP$ = 5
+~\newline$K_p$ = 1
+~\newline$K_i$ = 2
+~\newline$K_d$ = 0
+~\newline$T_\text{sim}$ = 30 s
+~\newline$t_\text{step}$ = 0.01 s
 					
-Output: \wss{The expected result for the given inputs}
+\item{\textbf{Output:}}  Verify that the value in the last index of the following lists are,
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+$y(t)$ =  5 +/- 0.01
+~\newline$T_\text{elapsed}$  = 30 +/- 0.01 s
 
-How test will be performed: 
+\item{\textbf{Test Case Derivation:}}  The inputs of this test case have been calibrated 
+with a free PID simulation model \cite{Free_PID}. Therefore in this test case, at the end 
+of the simulation time, the Process Variable ($y(t)$) will be equal to the Set-Point. 
 
-\end{enumerate}
+A relative error of 10\% is applied to the process variable to accommodate rounding off errors 
+and floating point representation errors. Similarly, the simulation should end in the specified time, 
+with a relative error of 10\% to accommodate rounding off errors, floating point representation errors, and
+ operating system timer resolution.
 
-\subsubsection{Area of Testing2}
+\wss{Justify the expected value given in the Output field}
 
+\item{\textbf{How test will be performed:}}  The test will be automated with Pytest as mentioned in 
+section \ref{sec_Tools}.
+
+\end{itemize}
+\end{itemize}
+
+\subsubsection{Simulation parameters test}
+This section tests the simulation parameters, namely, the step time and the simulation time.
+
+\paragraph{Overall simulation time test}
+
+\begin{itemize}
+\item{TC-PID-3\\}
+\begin{itemize}
+
+\item{\textbf{Control:}} Automatic
+					
+\item{\textbf{Initial State:}} None
+
+\item{\textbf{Requirement ID(s):}}  R1, R2, R3, R4, R5.
+					
+\item{\textbf{Input:}} Set the input to the software as follows,
+
+$SP$ = 5
+~\newline$K_p$ = 1
+~\newline$K_i$ = 1
+~\newline$K_d$ = 0
+~\newline$T_\text{sim}$ = 10 s
+~\newline$t_\text{step}$ = 0.01 s
+					
+\item{\textbf{Output:}}  Verify that the last values of the following list elements are,
+
+$y(t)$ =  4.1 +/ 0.01
+~\newline$T_\text{elapsed}$  = 10 +/- 0.01 s
+
+\item{\textbf{Test Case Derivation:}}  The total time elapsed should be equal to the simulation time, 
+with 0.01s tolerance for operating system timer errors.
+
+A relative error of 10\% is applied to the process variable for loss
+of precision for rounding off errors and floating point representation
+errors. Similarly, the simulation should end in the specified time, with a 
+relative error of 10\% for rounding off errors, floating point 
+representation errors, and operating system timer resolution.
+
+\wss{Justify the expected value given in the Output field}
+
+\item{\textbf{How test will be performed:}}  The test will be automated using Pytest as specified in 
+section \ref{sec_Tools}.
+
+\end{itemize}
+\end{itemize}
+
+\paragraph{Simulation step time test}
+
+\begin{itemize}
+\item{TC-PID-4\\}
+\begin{itemize}
+
+\item{\textbf{Control:}} Automatic
+					
+\item{\textbf{Initial State:}} None
+
+\item{\textbf{Requirement ID(s):}}  R1, R2, R3, R4, R5.
+					
+\item{\textbf{Input:}} Set the input to the software as follows,
+
+$SP$ = 5
+~\newline$K_p$ = 1
+~\newline$K_i$ = 1
+~\newline$K_d$ = 0
+~\newline$T_\text{sim}$ = 10 s
+~\newline$t_\text{step}$ = 0.5 s
+					
+\item{\textbf{Output:}}  Verify that the difference between the subsequent values of the 
+$T_\text{elapsed}$ is 0.5 s.
+
+\item{\textbf{Test Case Derivation:}}  $t_\text{step}$ is the time for one iteration of the of the
+control loop; all computations are $t_\text{step}$ apart.
+
+A relative error of 10\% is applied to the process variable for loss
+of precision for rounding off errors and floating point representation
+errors. Similarly, the simulation should end in the specified time, with a 
+relative error of 10\% for rounding off errors, floating point 
+representation errors, and operating system timer resolution.
+
+\wss{Justify the expected value given in the Output field}
+
+\item{\textbf{How test will be performed:}}  The test will be automated using Pytest as specified in 
+section \ref{sec_Tools}.
+
+\end{itemize}
+\end{itemize}
 ...
 
 \subsection{Tests for Nonfunctional Requirements}
@@ -194,51 +470,241 @@ How test will be performed:
   appropriate functional tests from above.  The test cases should mention
   reporting the relative error for these tests.}
 
+This section contains the test cases for the non-functional requirements (section
+5.2) of the SRS \cite{SRS}.
+
 \wss{Tests related to usability could include conducting a usability test and
   survey.}
 
-\subsubsection{Area of Testing1}
+\subsubsection{Software Quality Tests}
 		
-\paragraph{Title for Test}
+\paragraph{Statement Coverage Test}
+
+\begin{itemize}
+\item{TC-PID-5\\}
+\begin{itemize}
+
+\item{\textbf{Type:}} Dynamic, Automated.
+					
+\item{\textbf{Initial State:}} None
+
+\item{\textbf{Requirement ID(s):}} NFR-6
+					
+\item{\textbf{Input/Condition:}}  Execute test cases TC-PID-1 to TC-PID-5.
+					
+\item{\textbf{Output/Result:}} Verify that the statement coverage is 100\%.
+
+\item{\textbf{How test will be performed:}}  This test will be executed with Pytest \cite{Pytest} in 
+the Pycharm \cite{Pycharm} IDE. The tests should be executed with the code coverage 
+option. 
+
+\end{itemize}
+\end{itemize}
+
+\paragraph{Static code analysis}
+
+\begin{itemize}
+\item{TC-PID-6\\}
+\begin{itemize}
+
+\item{\textbf{Type:}} Static, Automated.
+					
+\item{\textbf{Initial State:}} None
+
+\item{\textbf{Requirement ID(s):}} NFR-6
+					
+\item{\textbf{Input/Condition:}}  Execute TC-PID-2
+					
+\item{\textbf{Output/Result:}} Verify that the inspection report does not contain any warnings.
+
+\item{\textbf{How test will be performed:}}  This test will be executed in PyCharm \cite{Pycharm}. 
+The default profile for verification should be selected. 
+
+\end{itemize}
+\end{itemize}
+
+\subsubsection{Portability Test}
+
+\begin{itemize}
+\item{TC-PID-7\\}
+\begin{itemize}
+
+\item{\textbf{Type:}} Manual, Dynamic.
+					
+\item{\textbf{Initial State:}} None
+
+\item{\textbf{Requirement ID(s):}} NFR-1
+					
+\item{\textbf{Input/Condition:}}  Execute TC-PID-2 in each of the the following 
+operating systems,
 
 \begin{enumerate}
+\item Windows 10.
+\item Bodhi Linux 5.1.0. 
+\end {enumerate}
+					
+\item{\textbf{Output/Result:}} Verify that on each of the operating systems the test 
+case TC-PID-2 passes. 
 
-\item{test-id1\\}
+\item{\textbf{How test will be performed:}}  Manual execution of the test script on 
+each of the operating systems.
 
-Type: 
-					
-Initial State: 
-					
-Input/Condition: 
-					
-Output/Result: 
-					
-How test will be performed: 
-					
-\item{test-id2\\}
+\end{itemize}
+\end{itemize}
 
-Type: Functional, Dynamic, Manual, Static etc.
+\subsubsection{Modularity Test}
+\begin{itemize}
+\item{TC-PID-8\\}
+\begin{itemize}
+\item{\textbf{Type:}} Manual.
 					
-Initial State: 
-					
-Input: 
-					
-Output: 
-					
-How test will be performed: 
+\item{\textbf{Initial State:}} None
 
+\item{\textbf{Requirement ID(s):}} NFR-2
+					
+\item{\textbf{Input/Condition:}}  Execute TC-PID-2.
+					
+\item{\textbf{Output/Result:}} Verify that the test case TC-PID-2 passes.
+
+\item{\textbf{How test will be performed:}}  
+\begin{enumerate}
+\item Create a new python script. This script may be one of the 
+systems tests listed in section \ref{sec_systems_tests}. 
+\item Import the PID controller software as a module in the created script.
+\item Feed the same inputs as specified in TC-PID-2.
 \end{enumerate}
+\end{itemize}
+\end{itemize}
 
-\subsubsection{Area of Testing2}
+\subsubsection{Security Tests}
 
-...
+\paragraph{Memory leak check}
+\begin{itemize}
+\item{TC-PID-9\\}
+\begin{itemize}
+\item{\textbf{Type:}} Automated, Dynamic.
+					
+\item{\textbf{Initial State:}} None
 
+\item{\textbf{Requirement ID(s):}} NFR-3
+					
+\item{\textbf{Input/Condition:}}  Execute the test script of TC-PID-2.
+					
+\item{\textbf{Output/Result:}} Verify that the test case TC-PID-2 passes and there
+are no memory leaks identified in the  report generated by Valgrind.
+
+\item{\textbf{How test will be performed:}} Valgrind \cite{Valgrind} is used to fork
+the python script. After the execution, a report is generated by Valgrind. 
+\end{itemize}
+\end{itemize}
+
+\paragraph{Divide by-zero check}
+\begin{itemize}
+\item{TC-PID-10\\}
+\begin{itemize}
+\item{\textbf{Type:}} Static, Inspection.
+					
+\item{\textbf{Initial State:}} None
+
+\item{\textbf{Requirement ID(s):}} NFR-3
+					
+\item{\textbf{Input/Condition:}}  Source code of the PID controller.
+					
+\item{\textbf{Output/Result:}} For every division in the source code, verify that
+the denominator is tested for a non zero value. 
+
+\item{\textbf{How test will be performed:}}  Manual inspection of the source code.
+\end{itemize}
+\end{itemize}
+
+\paragraph{Negative square root check}
+\begin{itemize}
+\item{TC-PID-11\\}
+\begin{itemize}
+\item{\textbf{Type:}} Static analysis and Inspection
+					
+\item{\textbf{Initial State:}} None
+
+\item{\textbf{Requirement ID(s):}} NFR-3
+					
+\item{\textbf{Input/Condition:}}  Source code of the PID controller.
+					
+\item{\textbf{Output/Result:}} For every square root function in the source code,
+verify that the operands are tested for negative values before the function call.
+
+\item{\textbf{How test will be performed:}}  Manual inspection of the source code.
+\end{itemize}
+\end{itemize}
+\subsubsection{Maintainability test}
+
+\begin{itemize}
+\item{TC-PID-11\\}
+\begin{itemize}
+\item{\textbf{Type:}} Inspection
+					
+\item{\textbf{Initial State:}} None
+
+\item{\textbf{Requirement ID(s):}} NFR-4
+					
+\item{\textbf{Input/Condition:}}  The source code, and the User's Guide of the PID controller.
+					
+\item{\textbf{Output/Result:}} Verify that all the classes, methods and modules in the source
+code are documented in the User's Guide.
+
+\item{\textbf{How test will be performed:}}  Manual inspection of the source code and the 
+User's guide.
+\end{itemize}
+\end{itemize}
+
+\subsubsection{Verifiability test}
+
+\begin{itemize}
+\item{TC-PID-13\\}
+\begin{itemize}
+\item{\textbf{Type:}} Inspection
+					
+\item{\textbf{Initial State:}} None
+
+\item{\textbf{Requirement ID(s):}} NFR-5
+					
+\item{\textbf{Input/Condition:}} Vnv report and the SRS of the PID Controller.
+					
+\item{\textbf{Output/Result:}} Verify that for each requirement in the SRS, there
+exists at-least one test case in the VnV report.
+ 
+\item{\textbf{How test will be performed:}} Manual inspection of the documents.
+\end{itemize}
+\end{itemize}
 \subsection{Traceability Between Test Cases and Requirements}
 
 \wss{Provide a table that shows which test cases are supporting which
   requirements.}
 
-\section{Unit Test Description}
+Table-\ref{tblTrace} contains the mapping of requirements to test cases.
+  
+\begin{table}[]
+\caption{Requirements vs Test Cases Trace Matrix}
+\label{tblTrace}
+\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+\hline
+          & R1 & R2 & R3 & R4 & R5 & NFR1 & NFR2 & NFR3 & NFR4 & NFR5 & NFR6 \\ \hline
+TC-PID-1  & X  & X  & X  & X  & X  &      &      &      &      &      &      \\ \hline
+TC-PID-2  & X  & X  & X  & X  & X  &      &      &      &      &      &      \\ \hline
+TC-PID-3  & X  & X  & X  & X  & X  &      &      &      &      &      &      \\ \hline
+TC-PID-4  & X  & X  & X  & X  & X  &      &      &      &      &      &      \\ \hline
+TC-PID-5  & X  & X  & X  & X  & X  &      &      &      &      &      &      \\ \hline
+TC-PID-6  &    &    &    &    &    &      &      &      &      &      & X    \\ \hline
+TC-PID-7  &    &    &    &    &    & X    &      &      &      &      &      \\ \hline
+TC-PID-8  &    &    &    &    &    &      & X    &      &      &      &      \\ \hline
+TC-PID-9  &    &    &    &    &    &      &      & X    &      &      &      \\ \hline
+TC-PID-10 &    &    &    &    &    &      &      & X    &      &      &      \\ \hline
+TC-PID-11 &    &    &    &    &    &      &      & X    &      &      &      \\ \hline
+TC-PID-12 &    &    &    &    &    &      &      &      & X    &      &      \\ \hline
+TC-PID-13 &    &    &    &    &    &      &      &      &      & X    &      \\ \hline
+\end{tabular}
+\end{table}
+
+\section{Unit Test Description}  \label{sec_unit_tests}
 
 \wss{Reference your MIS and explain your overall philosophy for test case
   selection.}  
@@ -272,31 +738,34 @@ How test will be performed:
 
 Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
   be automatic}
-					
-Initial State: 
-					
-Input: 
-					
-Output: \wss{The expected result for the given inputs}
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+\begin{enumerate}
+\item{\textbf{Initial State:}} 
+					
+\item{\textbf{Input:}} 
+					
+\item{\textbf{Output:}}  \wss{The expected result for the given inputs}
 
-How test will be performed: 
+\item{\textbf{Test Case Derivation:}}  \wss{Justify the expected value given in the Output field}
+
+\item{\textbf{How test will be performed:}}  
+
+\end{enumerate}
 					
 \item{test-id2\\}
 
 Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
   be automatic}
 					
-Initial State: 
+\item{\textbf{Initial State:}} 
 					
-Input: 
+\item{\textbf{Input:}} 
 					
-Output: \wss{The expected result for the given inputs}
+\item{\textbf{Output:}}  \wss{The expected result for the given inputs}
 
-Test Case Derivation: \wss{Justify the expected value given in the Output field}
+\item{\textbf{Test Case Derivation:}}  \wss{Justify the expected value given in the Output field}
 
-How test will be performed: 
+\item{\textbf{How test will be performed:}}  
 
 \item{...\\}
     
@@ -323,27 +792,35 @@ How test will be performed:
 
 Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
   be automatic}
+
+\begin{itemize}	
+\item{\textbf{Initial State:}} 
 					
-Initial State: 
-					
-Input/Condition: 
+\item{\textbf{Input/Condition:}}  
 					
 Output/Result: 
 					
-How test will be performed: 
+\item{\textbf{How test will be performed:}}  
+
+\end{itemize}
+\end{enumerate}
 					
+\begin{enumerate}
 \item{test-id2\\}
 
 Type: Functional, Dynamic, Manual, Static etc.
-					
-Initial State: 
-					
-Input: 
-					
-Output: 
-					
-How test will be performed: 
 
+\begin{itemize}
+					
+\item{\textbf{Initial State:}} 
+					
+\item{\textbf{Input:}} 
+					
+\item{\textbf{Output:}}  
+					
+\item{\textbf{How test will be performed:}}  
+
+\end{itemize}
 \end{enumerate}
 
 \subsubsection{Module ?}
@@ -354,23 +831,23 @@ How test will be performed:
 
 \wss{Provide evidence that all of the modules have been considered.}
 				
-\bibliographystyle{plainnat}
 
-\bibliography{../../refs/References}
+\bibliographystyle{abbrvnat}
+\bibliography {../../refs/References}
 
-\newpage
+%\newpage
 
-\section{Appendix}
+%\section{Appendix}
 
-This is where you can place additional information.
+%This is where you can place additional information.
 
-\subsection{Symbolic Parameters}
+%\subsection{Symbolic Parameters}
 
-The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
-Their values are defined in this section for easy maintenance.
+%The definition of the test cases will call for SYMBOLIC\_CONSTANTS.
+%Their values are defined in this section for easy maintenance.
 
-\subsection{Usability Survey Questions?}
+%\subsection{Usability Survey Questions?}
 
-\wss{This is a section that would be appropriate for some projects.}
+%\wss{This is a section that would be appropriate for some projects.}
 
 \end{document}
