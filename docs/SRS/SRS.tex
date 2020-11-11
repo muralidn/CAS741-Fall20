@@ -99,7 +99,7 @@ Simulation of a PID control loop.}
 \begin{tabularx}{\textwidth}{p{3cm}p{2cm}X}
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
-09-Oct-2020 & 1.0 & First draft of the SRS\\
+09-Oct-2020 & 1.0 & A first draft of the SRS\\
 12-Oct-2020 & 1.1 & Addressed the following issues,
 \begin{itemize}
 \item Elaborated Intended reader and user characteristics.
@@ -111,9 +111,9 @@ Simulation of a PID control loop.}
 \end{itemize}\\
 19-Oct-2020 & 1.2 & Addressed the following issues,
 \begin{itemize}
-\item Updated the properties of correct solution and removed the corresponding
+\item Updated the properties of the correct solution and removed the corresponding
 non-functional requirement.
-\item Rephrased Intended reader characteristics, \ddref{DD_TStep} and goal statements for
+\item Rephrased Intended reader characteristics, \ddref{DD_TStep}, and goal statements for
 clarity.
 \item Added time-domain analysis to the scope.
 \item Fixed typographical errors.
@@ -134,7 +134,7 @@ This section records information for easy reference.
 
 \subsection{Table of Units}
 
-Throughout this document SI (Syst\`{e}me International d'Unit\'{e}s) is employed
+Throughout this document, SI (Syst\`{e}me International d'Unit\'{e}s) is employed
 as the unit system.  In addition to the basic units, several derived units are
 used as described below.  For each unit, the symbol is given followed by a
 description of the unit and the SI name.
@@ -202,7 +202,7 @@ $t_\text{step}$ & \si[per-mode=symbol] {\second} & Simulation step time
 \\
 $u(t)$ & Mathematical value (dimensionless) & Control Variable at time t
 \\
-$x(t)$ & Mathematical value (dimensionless) & Generic input signal at time t
+$x(t)$ & Mathematical value (dimensionless) & A generic input signal at time t
 \\
 $y(t)$ & Mathematical value (dimensionless) & Process Variable at time t
 \\ 
@@ -318,14 +318,14 @@ paragraph.  A road-map orients the reader by telling them what sub-sections to
 expect in the Introduction section.}
 
 A closed loop control system with a PID controller is used in a wide range of 
-applications such as a thermostat, automobile cruise-control etc. The 
+applications such as a thermostat, automobile cruise-control, etc. The 
 gains of a PID controller in an application must be tuned before the 
 controller is ready for production. Therefore, a software model is necessary for 
 the simulation of PID controller.
 
 ~\newline
 In this section, the purpose of the document is first discussed, followed by the
-scope of the requirements, characteristics of intended reader, and finally the 
+scope of the requirements, characteristics of the intended reader, and finally the 
 organization of the document.
 
 \subsection{Purpose of Document}
@@ -364,7 +364,7 @@ software and test procedures.
   
 The scope of the requirements is limited to the simulation of a closed
 loop control system with three subsystems, namely, a Summing point, a PID 
-controller and a Power Plant. All the analysis in this application are in the 
+controller, and a Power Plant. All the analyses  in this application are in the 
 time domain.
 
 \subsection{Characteristics of Intended Reader} \label{sec_IntendedReader}
@@ -384,9 +384,9 @@ time domain.
   instance, is high school physics adequate, or should the reader have had a
   graduate course on advanced quantum mechanics?}
 
-The reader of this document is assumed to have a prerequisite knowledge of 
-Control System (Control theory and controllers) at a fourth year undergraduate 
-engineering level, and knowledge of calculus at high school level. 
+The reader of this document is assumed to have prerequisite knowledge of 
+Control System (Control theory and controllers) at a fourth-year undergraduate 
+engineering level, and knowledge of calculus at the high school level. 
 
 \subsection{Organization of Document}
 
@@ -406,14 +406,14 @@ Models.
 ~\newline
 The suggested order of reading this document for a reader who is not familiar 
 with the domain would be to start with the problem description, review goals, 
-and proceed to the subsequent sections. Reader with knowledge of the domain 
+and proceed to the subsequent sections. A reader with knowledge of the domain 
 can directly review the Instance Models and choose to proceed in either direction.
 
 \section{General System Description}
 
 This section provides general information about the system. It identifies the
 interfaces between the system and its environment, describes the user
-characteristics and lists the system constraints.  \plt{This text can likely be
+characteristics, and lists the system constraints.  \plt{This text can likely be
   borrowed verbatim.}
 
 \plt{The purpose of this section is to provide general information about the
@@ -468,7 +468,7 @@ user. The responsibilities of the user and the system are as follows,
 \end{itemize}
 \item \progname{} Responsibilities:
 \begin{itemize}
-\item Calculate the outputs of the PID controller, and Power Plant.
+\item Calculate the outputs of the PID controller and Power Plant.
 \end{itemize}
 \end{itemize}
 
@@ -483,8 +483,8 @@ user. The responsibilities of the user and the system are as follows,
   end user of \progname{} should have an understanding of undergraduate Level 1
   Calculus and Physics.''}
   
-The end user of \progname{} should at the minimum have knowledge of Control 
-Systems at a second year undergraduate engineering level, and knowledge 
+The end-user of \progname{} should at the minimum have knowledge of Control 
+Systems at a second-year undergraduate engineering level, and knowledge 
 of High school Calculus.
 
 \subsection{System Constraints}
@@ -507,13 +507,13 @@ of High school Calculus.
   included if they are truly required. In the context of CAS 741, you often will
   may not have any system constraints.}
    
-No system constraints identified for \progname{}.
+No system constraints were identified for \progname{}.
 
 \section{Specific System Description}
 
 This section first presents the problem description, which gives a high-level
 view of the problem to be solved.  This is followed by the solution characteristics
-specification, which presents the assumptions, theories, definitions and finally
+specification, which presents the assumptions, theories, definitions, and finally
 the instance models.  \plt{Add any project specific details that are relevant
   for the section overview.}
 
@@ -545,7 +545,7 @@ difference between the Set Point and the Process Variable.
 loop.
 
 \item [PID Control Loop:] Closed loop control system with PID Controller, 
-Summing Point and Power Plant.
+Summing Point, and Power Plant.
 
 \item [Power Plant:] The system to be controlled. 
 
@@ -615,7 +615,7 @@ includes the following elements:
   experts.}
 
 \noindent Given the Set-Point, Proportional Gain, Integral Gain, Derivative Gain, 
-Total Simulation time and Step Time, the goal statements are:
+Total Simulation time, and Step Time, the goal statements are:
 
 \begin{itemize}
 % \item[GS\refstepcounter{goalnum}\thegoalnum \label{G_ES}:] \plt{One
@@ -682,7 +682,7 @@ output (Process Variable) of the Power-Plant at every step.
 
 The instance models that govern \progname{} are presented in
 Subsection~\ref{sec_instance}.  The information to understand the meaning of the
-instance models and their derivation is also presented, so that the instance
+instance models and their derivation is also presented so that the instance
 models can be verified.
 
 \subsubsection{Assumptions} \label{sec_assumpt}
@@ -719,7 +719,7 @@ likely change [LC], in which the respective assumption is used.
     \lcref{LC_EQ}].
 
 \item[A\refstepcounter{assumpnum}\theassumpnum \label{A_SP}:] The Set-Point is 
-a constant throughout the execution of the program [Ref By: \ddref{DD_SP}, 
+constant throughout the execution of the program [Ref By: \ddref{DD_SP}, 
     \lcref{LC_SP}].
 
 \item[A\refstepcounter{assumpnum}\theassumpnum \label{A_Attn}:] There are no 
@@ -769,7 +769,7 @@ models as appropriate.}
 This section collects the laws and equations that will be used in building the
 instance models. 
 
-~\newline This section is not applicable for  \progname{}.
+~\newline This section is not applicable to  \progname{}.
 
 \plt{Some projects may not have any content for this section, but the section
   heading should be kept.}  \plt{Modify the examples below for your problem, and
@@ -817,7 +817,7 @@ Symbol &$SP$\\
   \hline
   Description & 
   The Set Point (SP) is the expected output that the control loop must achieve.
-  For this simulation, the set-point is assumed to be a constant throughout the 
+  For this simulation, the set-point is assumed to be constant throughout the 
   simulation (\aref{A_SP}).
   \\
   \hline
@@ -1076,7 +1076,7 @@ one which is expressed in mathematical terms. It uses concrete symbols defined
 in Section~\ref{sec_datadef} to replace the abstract symbols in the models 
 identified in Sections~\ref{sec_theoretical} and~\ref{sec_gendef}.
 
-~\newline The goals \ref{G_PV} and \ref{G_ET} are solved by \iref{IM_PV} and \iref{IM_ET} respectively.
+~\newline Goal \ref{G_PV} is solved by \iref{IM_PV} and \iref{IM_ET}.
 
 \plt{reference your instancemodels.}  \plt{other details, with cross-references where appropriate.} \plt{Modify the examples below for your problem, and add additional models as appropriate.}
 
@@ -1134,7 +1134,8 @@ identified in Sections~\ref{sec_theoretical} and~\ref{sec_gendef}.
   The Control Variable is the sum of the  present (Proportional), past (Integral) 
   and future (Derivative) values of the error. The control variable is 
   calculated at each step of the simulation. The equation used for the PID 
-  controller is parallel (\aref{A_Parallel}), that is, the P,I,D components are parallel to each other, and de-coupled (\aref{A_EQ}), that is the gains of 
+  controller is parallel (\aref{A_Parallel}), that is, the P, I, D components are parallel
+   to each other, and de-coupled (\aref{A_EQ}), that is the gains of 
   the P, I, D component are not inter-dependent.\\
   \hline
   Sources& 
@@ -1180,7 +1181,7 @@ d\tau$ + $K_d$ . $\frac{d(e(t))}{dt}$
   \hline
   Description & The Process Variable is the output of the power plant 
   (\aref{A_PP}). The Process Variable is calculated at each step of the 
-  simulation. Additionally, it is assumed that the the power plant does 
+  simulation. Additionally, it is assumed that the power plant does 
   not have any external disturbances (\aref{A_Attn}).\\
   \hline
   Sources& 
@@ -1225,7 +1226,7 @@ d\tau$ + $K_d$ . $\frac{d(e(t))}{dt}$
 
 \subsubsection{Input Data Constraints} \label{sec_DataConstraints}    
 
-Table~\ref{TblInputVar} shows the data constraints on the input output
+Table~\ref{TblInputVar} shows the data constraints on the input-output
 variables.  The column for physical constraints gives the physical limitations
 on the range of values that can be taken by the variable.  The column for
 software constraints restricts the range of inputs to reasonable values.  The
@@ -1273,8 +1274,8 @@ Table~\ref{TblSpecParams}.
 \noindent 
 \begin{description}
 \item[(*)] \plt{you might need to add some notes or clarifications}
-There is no ideal value for the Set-Point. However, setting it to the mid 
-point of $SP_{\text{min}}$ and $SP_{\text{max}}$ may help with tuning.
+There is no ideal value for the Set-Point. However, setting it to the midpoint 
+of $SP_{\text{min}}$ and $SP_{\text{max}}$ may help with tuning.
 \end{description}
 
 
@@ -1306,7 +1307,8 @@ point of $SP_{\text{min}}$ and $SP_{\text{max}}$ may help with tuning.
 \noindent
 The output of this program will help the user to calibrate the right values for 
 the PID gain constants. Therefore it is the user's responsibility (see 
-\ref{sec_User_Responsibilities}) to adjudge the correct system response. For the right values of the PID gains, the response of the Power-Plant will be stable and 
+\ref{sec_User_Responsibilities}) to adjudge the correct system response. 
+For the right values of the PID gains, the response of the Power-Plant will be stable and 
 the Process Variable will reach the Set-Point.
 
 \plt{fill in the details.}  \plt{These
@@ -1335,7 +1337,7 @@ the Process Variable will reach the Set-Point.
   references to the instance models.}
 
 This section provides the functional requirements, the business tasks that the
-software is expected to complete, and the nonfunctional requirements, the
+software is expected to complete, and the non-functional requirements, the
 qualities that the software is expected to exhibit.
 
 \subsection{Functional Requirements}
@@ -1381,7 +1383,7 @@ qualities that the software is expected to exhibit.
 
 \noindent \begin{itemize}
 
-\item[NFR\refstepcounter{nfreqnum}\thenfreqnum \label{R_Portability}:] Probability:
+\item[NFR\refstepcounter{nfreqnum}\thenfreqnum \label{R_Portability}:] Portability:
  The code shall be portable to multiple Operating Systems.
 
 \item[NFR\refstepcounter{nfreqnum}\thenfreqnum \label{R_Modularity}:] Modularity:
@@ -1418,7 +1420,7 @@ standards and should not contain any dead, or unreachable statements.
     PID controller could be changed to industrial form (\aref{A_EQ}).
     
 \item[LC\refstepcounter{lcnum}\thelcnum\label{LC_Initial}:] A non-zero value
-    of process variable could be used at the start of the simulation 
+    of the process variable could be used at the start of the simulation 
     (\aref{A_Initial}).
     
 \item[LC\refstepcounter{lcnum}\thelcnum\label{LC_SP}:] The Set Point could be 
@@ -1432,7 +1434,7 @@ standards and should not contain any dead, or unreachable statements.
  
 \item[LC\refstepcounter{lcnum}\thelcnum\label{LC_U_Parallel}:] \plt{Give
     the unlikely changes.  The design can assume that the changes listed will
-    not occur.} The parallel form of equation for PID controller is 
+    not occur.} The parallel form of the equation for the PID controller is 
     unlikely to change (\aref{A_Parallel}).
 
 \end{itemize}
@@ -1441,7 +1443,7 @@ standards and should not contain any dead, or unreachable statements.
 
 The purpose of the traceability matrices is to provide easy references on what
 has to be additionally modified if a certain component is changed.  Every time a
-component is changed, the items in the column of that component that are marked
+component is changed, the items in the column of that component that is marked
 with an ``X'' may have to be modified as well.  Table~\ref{Table:trace} shows the
 dependencies of theoretical models, general definitions, data definitions, and
 instance models with each other. Table~\ref{Table:R_trace} shows the
@@ -1454,7 +1456,7 @@ Definition and Requirements with each other.
 The purpose of the traceability graphs is also to provide easy references on
 what has to be additionally modified if a certain component is changed.  The
 arrows in the graphs represent dependencies. The component at the tail of an
-arrow is depended on by the component at the head of that arrow. Therefore, if a
+arrow is dependent on the component at the head of that arrow. Therefore, if a
 component is changed, the components that it points to should also be
 changed. 
 
