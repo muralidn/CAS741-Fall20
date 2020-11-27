@@ -378,49 +378,6 @@ section \ref{sec_Tools}.
 \subsubsection{Simulation parameters test}
 This section tests the simulation parameters, namely, the step time and the simulation time.
 
-\paragraph{Overall simulation time test}
-
-\begin{itemize}
-\item{TC-PID-3\\}
-\begin{itemize}
-
-\item{\textbf{Control:}} Automatic
-					
-\item{\textbf{Initial State:}} None
-
-\item{\textbf{Requirement ID(s):}}  R1, R2, R3, R4, R5.
-					
-\item{\textbf{Input:}} Set the input to the software as follows,
-
-$SP$ = 5
-~\newline$K_p$ = 1
-~\newline$K_i$ = 1
-~\newline$K_d$ = 0
-~\newline$T_\text{sim}$ = 10 s
-~\newline$t_\text{step}$ = 0.01 s
-					
-\item{\textbf{Output:}}  Verify that the last values of the following list elements are,
-
-$y(t)$ =  4.1 +/ 0.01
-~\newline$T_\text{elapsed}$  = 10 +/- 0.01 s
-
-\item{\textbf{Test Case Derivation:}}  The total time elapsed should be equal to the simulation time, 
-with 0.01s tolerance for operating system timer errors.
-
-A relative error of 10\% is applied to the process variable for loss
-of precision for rounding off errors and floating point representation
-errors. Similarly, the simulation should end in the specified time, with a 
-relative error of 10\% for rounding off errors, floating point 
-representation errors, and operating system timer resolution.
-
-\wss{Justify the expected value given in the Output field}
-
-\item{\textbf{How test will be performed:}}  The test will be automated using Pytest as specified in 
-section \ref{sec_Tools}.
-
-\end{itemize}
-\end{itemize}
-
 \paragraph{Simulation step time test}
 
 \begin{itemize}
@@ -689,7 +646,6 @@ Table-\ref{tblTrace} contains the mapping of requirements to test cases.
           & R1 & R2 & R3 & R4 & R5 & NFR1 & NFR2 & NFR3 & NFR4 & NFR5 & NFR6 \\ \hline
 TC-PID-1  & X  & X  & X  & X  & X  &      &      &      &      &      &      \\ \hline
 TC-PID-2  & X  & X  & X  & X  & X  &      &      &      &      &      &      \\ \hline
-TC-PID-3  & X  & X  & X  & X  & X  &      &      &      &      &      &      \\ \hline
 TC-PID-4  & X  & X  & X  & X  & X  &      &      &      &      &      &      \\ \hline
 TC-PID-5  & X  & X  & X  & X  & X  &      &      &      &      &      &      \\ \hline
 TC-PID-6  &    &    &    &    &    &      &      &      &      &      & X    \\ \hline
