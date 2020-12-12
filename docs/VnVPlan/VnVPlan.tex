@@ -60,8 +60,6 @@
 
 \listoftables
 
-\listoffigures
-
 \newpage
 
 \section{Symbols, Abbreviations, and Acronyms}
@@ -73,6 +71,7 @@
   \midrule 
   API & Application Program Interface\\
   N & No\\
+  PEP8 & Python Enhancement Proposal 8\\
   stdin & Standard input stream\\
   stderr & Standard error stream\\
   stdout & Standard output stream\\
@@ -132,7 +131,6 @@ The objectives of the Verification and Validation procedures are to,
 \begin{itemize}
 \item Establish confidence in software correctness.
 \item Ensuring that the software meets the expected quality standards.
-\item Ensuring that the software is robust.
 \end{itemize}
 
 \subsection{Relevant Documentation}
@@ -141,7 +139,7 @@ The objectives of the Verification and Validation procedures are to,
   and your other project documents (MG, MIS, etc.)}
 
 The requirements for the PID Controller software are captured in the Software
-Requirements Specification \cite{SRS}.
+Requirements Specification \cite{SRS}
 
 The software design information are captured in the Module Guide  \cite{MG}
 and Module Interface Specification \cite{MIS} documents respectively.
@@ -152,16 +150,21 @@ and Module Interface Specification \cite{MIS} documents respectively.
 
 \wss{You, your classmates and the course instructor.  Maybe your supervisor.}
 
-The members of the VnV team for this project are,
+The members of the VnV team for this project are listed in Table \ref{tab:VnVTeam}.
 
-\begin{itemize}
-\item Naveen Ganesh Muralidharan
-\item Dr. Spencer Smith
-\item Ting-Yu Wu	
-\item Siddharth (Sid) Shinde
-\item Gabriela Sánchez Díaz	
-\item Seyed Parsa Tayefeh (Parsa) Morsal
-\end{itemize}
+\begin{table}[]
+\begin{tabular}{cc}
+\hline
+\multicolumn{1}{c|}{Team   Member} & Role \\ \hline
+Naveen Ganesh Muralidharan      & Author    \\
+Dr. Spencer Smith                     & Course Instructor and Domain Expert    \\
+Ting-Yu Wu                               & Domain Expert    \\
+Siddharth (Sid) Shinde               & Secondary reviewer - SRS    \\
+Gabriela Sánchez Díaz	               & Secondary reviewer - VnV Plan \\   
+\end{tabular}
+\caption{Verification and Validation Team}
+\label{tab:VnVTeam}
+\end{table}
 
 \subsection{SRS Verification Plan}
 
@@ -224,13 +227,13 @@ stderr levels.
 \item Unit Testing - Pytest \cite{Pytest} will be used for automated unit testing.
  Since this is a whitebox test, Pytest will be used at the API level.
 
-\item Statement coverage - Pycharm \cite{Pycharm}. Pycharm automatically tracks
- the statement coverage upon the execution of systems test scripts.
+\item Statement coverage - PyTest-Cov \cite{PyTest-Cov}. PyTest-Cov is used 
+along with Pytest to obtain the statement coverage.
 
-\item Memory leaks - Valgrind \cite{Valgrind}.
+\item Memory leaks - Valgrind \cite{Valgrind} can be used for memory leak analyses. 
 
-\item Static Analysis - PyCharm \cite{Pycharm}. Static analysis includes checks for linting,
-coding standards, etc.
+\item Linting - Flake8 \cite{Flake8}. Linting tool that checks for the coding style against
+the PEP8 standard.
 
 \end{itemize}
 
@@ -275,27 +278,18 @@ and the output is verified.
 \paragraph{Input Constraints test}
 
 \begin{table}[]
-\caption{TC-PID-1}
-\label{tbltc001}
-\begin{tabular}{@{}lccccccccc@{}}
-\toprule
-\multicolumn{1}{l|}{}   & \multicolumn{6}{c|}{Input}  & \multicolumn{3}{c}{Output}\\     
-\midrule \multicolumn{1}{c|}{ID} & $SP$ & $K_p$ & $K_i$ & $K_d$ & $T_\text{sim}$ (s)
- & \multicolumn{1}{c|}{$t_\text{step}$ (s)} & $y(t)$ & $T_\text{elapsed} (s)$ & Error
-message \\ \midrule
-TC-PID-1-1 & 5    & 1     & 1     & 0     & 10    & 0.01 & 4.1   & 10    & N\\
-TC-PID-1-2 & 0    & 1     & 1     & 0     & 10    & 0.01 & None & None & Y\\
-TC-PID-1-3 & 30.1 & 1     & 1     & 0     & 10    & 0.01 & None & None & Y \\
-TC-PID-1-4 & 5    & -0.01 & 1     & 0     & 10    & 0.01 & None & None & Y \\
-TC-PID-1-5 & 5    & 10.1  & 1     & 0     & 10    & 0.01 & None & None & Y \\
-TC-PID-1-6 & 5    & 1     & -0.01 & 0     & 10    & 0.01 & None & None & Y \\
-TC-PID-1-7 & 5    & 1     & 10.1  & 0     & 10    & 0.01 & None & None & Y \\
-TC-PID-1-8 & 5    & 1     & 1     & -0.01 & 10    & 0.01 & None & None & Y \\
-TC-PID-1-9 & 5    & 1     & 1     & 10.1  & 10    & 0.01 & None & None & Y \\
-TC-PID-1-10 & 5    & 1     & 1     & 0     & 0     & 0.01 & None & None & Y \\
-TC-PID-1-11 & 5    & 1     & 1     & 0     & 120.1 & 0.01 & None & None & Y \\
-TC-PID-1-12 & 5    & 1     & 1     & 0     & 10    & 0    & None & None & Y \\
-TC-PID-1-13 & 5    & 1     & 1     & 0     & 10    & 1.1  & None & None & Y \\ \bottomrule
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+\multicolumn{1}{|l|}{} & \multicolumn{5}{c|}{Inputs}                    & \multicolumn{2}{c|}{Outputs} \\ \hline
+ID                     & r\_t    & K\_p    & K\_d    & t\_sim & t\_step & y\_t      & Error\_Message   \\ \hline
+TC-PID-1-1             & 1       & 20      & 1       & 10     & 0.01    & 0.9524    & N/A              \\ \hline
+TC-PID-1-2             & -0.0001 & 20      & 1       & 10     & 0.01    & N/A       & InputError       \\ \hline
+TC-PID-1-3             & 1       & -0.0001 & 1       & 10     & 0.01    & N/A       & InputError       \\ \hline
+TC-PID-1-4             & 1       & 20      & -0.0001 & 10     & 0.01    & N/A       & InputError       \\ \hline
+TC-PID-1-5             & 1       & 20      & 1       & 61     & 0.01    & N/A       & InputError       \\ \hline
+TC-PID-1-6             & 1       & 20      & 1       & 0.5    & 0.01    & N/A       & InputError       \\ \hline
+TC-PID-1-7             & 1       & 20      & 1       & 10     & 0.001   & N/A       & InputError       \\ \hline
+TC-PID-1-8            & 1       & 20      & 1       & 10     & 2       & N/A       & InputError       \\ \hline
 \end{tabular}
 \end{table}
 
