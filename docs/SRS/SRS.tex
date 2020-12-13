@@ -363,9 +363,8 @@ software and test procedures.
   describes, all of the assumptions.}
   
 The scope of the requirements is limited to the simulation of a closed
-loop control system with three subsystems, namely, a Summing point, a PID 
-controller, and a Power Plant. All the analyses  in this application are in the 
-time domain.
+loop control system with three subsystems, namely, a Summing point, a PD 
+controller, and a Power Plant. 
 
 \subsection{Characteristics of Intended Reader} \label{sec_IntendedReader}
 
@@ -755,8 +754,65 @@ This section focuses on the general equations and laws that the application is
 based on.  \plt{Modify the examples below for your problem, and add additional 
 models as appropriate.}
   
-~\newline \progname{} is not based on any general equation or laws.
+~\newline
 
+\noindent
+\begin{minipage}{\textwidth}
+\renewcommand*{\arraystretch}{1.5}
+\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
+  \hline
+  \rowcolor[gray]{0.9}
+  Number& T\refstepcounter{theorynum}\thetheorynum \label{T_LT}\\
+  \hline
+  Label&\bf Laplace transform\\
+  \hline
+  Equation&  $F(S) = \int_{-\infty}^{\infty} f(t) e^{-st} dt $ \\
+  \hline
+  Description & 
+                F(S) is the the bilateral Laplace transform of a function f(t), 
+                defined for all real numbers $t \ge 0$.  s is a complex number
+                frequency parameter defined as $s = \sigma + i\omega$ ,
+                with real numbers $\sigma$ and $\omega$. \\
+  \hline
+  Source &
+           TODO \url{https://en.wikipedia.org/wiki/Laplace_transform}\\
+  % The above web link should be replaced with a proper citation to a publication
+  \hline
+  Ref.\ By & TODO \iref{}\\
+  \hline
+\end{tabular}
+\end{minipage}\\
+
+~\newline
+
+\noindent
+\begin{minipage}{\textwidth}
+\renewcommand*{\arraystretch}{1.5}
+\begin{tabular}{| p{\colAwidth} | p{\colBwidth}|}
+  \hline
+  \rowcolor[gray]{0.9}
+  Number& T\refstepcounter{theorynum}\thetheorynum \label{T_ILT}\\
+  \hline
+  Label&\bf Inverse Laplace transform\\
+  \hline
+  Equation&  $f(t) = \frac{1}{2 \pi i} \lim_{T \to \infty}\int_{-\infty}^{\infty} f(t) e^{-st} dt $ \\
+  \hline
+  Description & 
+                F(S) is the the bilateral Laplace transform of a function f(t), 
+                defined for all real numbers $t \ge 0$.  s is a complex number
+                frequency parameter defined as $s = \sigma + i\omega$ ,
+                with real numbers $\sigma$ and $\omega$. \\
+  \hline
+  Source &
+           TODO \url{https://en.wikipedia.org/wiki/Laplace_transform}\\
+  % The above web link should be replaced with a proper citation to a publication
+  \hline
+  Ref.\ By & TODO \iref{}\\
+  \hline
+\end{tabular}
+\end{minipage}\\
+
+~\newline
 
 \subsubsection{General Definitions}\label{sec_gendef}
 
