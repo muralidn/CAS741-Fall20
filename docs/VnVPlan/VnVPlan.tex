@@ -22,6 +22,7 @@
 \usepackage{longtable}
 \usepackage{caption}
 \usepackage{enumitem}
+\usepackage{adjustbox}
 
 \hypersetup{
     colorlinks,
@@ -70,7 +71,9 @@
   \textbf{symbol} & \textbf{description}\\
   \midrule 
   API & Application Program Interface\\
+  DCCC & Data and Control Coupling\\
   N & No\\
+  PDF & Portable Document Format \\
   PEP8 & Python Enhancement Proposal 8\\
   stdin & Standard input stream\\
   stderr & Standard error stream\\
@@ -108,13 +111,13 @@ unit test cases respectively.
 \wss{Say what software is being tested.  Give its name and a brief overview of
   its general functions.}
 
-The software under test is the simulation of a PID control loop. The functions of 
-the PID control loop are,
+The software under test is the simulation of a PD control loop. The functions of 
+the PD control loop are,
 
 \begin{itemize}
 \item Calculating the Error Signal. Error Signal is the difference between the User 
 Input (Set-Point) and the output of the Power Plant (Process-Variable).
-\item Computing the output of the PID Controller.
+\item Computing the output of the PD Controller.
 \item Computing the response of the Power-Plant.
 \end{itemize}
 
@@ -138,7 +141,7 @@ The objectives of the Verification and Validation procedures are to,
 \wss{Reference relevant documentation.  This will definitely include your SRS
   and your other project documents (MG, MIS, etc.)}
 
-The requirements for the PID Controller software are captured in the Software
+The requirements for the PD Controller software are captured in the Software
 Requirements Specification \cite{SRS}
 
 The software design information are captured in the Module Guide  \cite{MG}
@@ -230,7 +233,7 @@ stderr levels.
 \item Statement coverage - PyTest-Cov \cite{PyTest-Cov}. PyTest-Cov is used 
 along with Pytest to obtain the statement coverage.
 
-\item Memory leaks - Valgrind \cite{Valgrind} can be used for memory leak analyses. 
+\item Memory leaks - Valgrind \cite{Valgrind} will  be used for memory leak analyses. 
 
 \item Linting - Flake8 \cite{Flake8}. Linting tool that checks for the coding style against
 the PEP8 standard.
@@ -283,38 +286,41 @@ TC-PD-1-2 & -0.0001 & 20      & 1       & 0.01   & 10      & N/A    & InputError
 TC-PD-1-3 & 1       & -0.0001 & 1       & 0.01   & 10      & N/A    & InputError \\
 TC-PD-1-4 & 1       & 20      & -0.0001 & 0.01   & 10      & N/A    & InputError \\
 TC-PD-1-5 & 1       & 20      & 1       & 0.0009 & 10      & N/A    & InputError \\
-TC-PD-1-6 & 1       & 20      & 1       & 1.0001 & 10      & N/A    & InputError \\
+TC-PD-1-6 & 1       & 20      & 1       & 10 & 10      & N/A    & InputError \\
 TC-PD-1-7 & 1       & 20      & 1       & 0.01   & 0.9999  & N/A    & InputError \\
 TC-PD-1-8 & 1       & 20      & 1       & 0.01   & 60.0001 & N/A    & InputError
 \end{tabular}
-\caption{TC-PID-1 - Input constraints tests}
-\label{tab:tc-pid-1}
+\caption{TC-PD-1 - Input constraints tests}
+\label{tab:tc-PD-1}
 \end{table}
 
 \begin{itemize}
-\item{TC-PID-1\\}
+\item{TC-PD-1\\}
 \begin{itemize}
 
 \item{\textbf{Control:}} Automatic
 					
 \item{\textbf{Initial State:}} None
 					
-\item{\textbf{Input:}} Set all inputs of the software to the values specified in the 
-`Input' columns in Table-\ref{tab:tc-pid-1}.
+\item{\textbf{Input:}} Set the inputs to the values specified in the `Input' columns 
+in Table-\ref{tab:tc-PD-1}.
 					
-\item{\textbf{Output:}}  Verify that all the outputs of the software match the 
-values specified in the `Output' columns of Table-\ref{tab:tc-pid-1}.
+\item{\textbf{Output:}}  Verify that the outputs of the software match the 
+values specified in the `Output' columns of Table-\ref{tab:tc-PD-1}.
 
 \wss{The expected result for the given inputs}
 
-\item{\textbf{Requirement ID(s):}}  R1, R2, R3, R4, R5.
+\item{\textbf{Requirement ID(s):}}  FR: Input-Values, FR: Verify-Input-Values, FR: Calculate-Values, FR: Output-Values.
 
 \item{\textbf{Test Case Derivation:}}  This test case is to test the behavior of the system 
-when the system is supplied with inputs that are out of range. The system should either
-produce an output or an error message. 
+when the system is supplied with inputs that are out of range. The system should produce an InputError, when
+the supplied values exceeds the physical constraints,
 
-For test cases with output, a relative error of 10\% is applied to accommodate rounding off errors,
-and floating point representation errors.
+The output, ${y_{\text{t}}}$ refers to the last value of the output list.
+
+The output specified in TC-PD-1-1 has been independently verified using a Simulink Model (\cite{Simulink}, 
+\cite{PD_Controller}). A relative error of 5\% is applied to accommodate rounding off errors,
+and floating point representation errors between the two software.
 
 \wss{Justify the expected value given in the Output field}
 					
@@ -327,91 +333,97 @@ section \ref{sec_Tools}.
 \paragraph{Output test}
 
 \begin{itemize}
-\item{TC-PID-2\\}
+\item{TC-PD-2\\}
 \begin{itemize}
+
+\begin{table}[]
+\begin{tabular}{lcccccc}
+\hline
+\multicolumn{1}{l|}{}   & \multicolumn{5}{c|}{Input}                            & \multicolumn{1}{c}{Output} \\ \hline
+\multicolumn{1}{c|}{ID} & ${r_{\text{t}}}$ & ${K_{\text{p}}}$  & ${K_{\text{d}}}$ & ${t_{\text{step}}}$ & \multicolumn{1}{c|}{${t_{\text{sim}}}$} & ${y_{\text{t}}}$ \\ \hline
+TC-PD-2-1 & 20    & 10      & 1       & 0.01   & 10      &18.18 \\
+TC-PD-2-2 & 20	  &  5      & 1       & 0.01   & 10      & 16.67     \\
+TC-PD-2-3 & 20   & 10    & 15    & 0.01   & 10      & 18.19     \\
+TC-PD-2-4 & 20   & 10   & 1     & 0.01   & 5      & 18.17      \\
+\end{tabular}
+\caption{TC-PD-2 - Output values}
+\label{tab:tc-PD-2}
+\end{table}
+
 
 \item{\textbf{Control:}} Automatic
 					
 \item{\textbf{Initial State:}} None
-
-\item{\textbf{Requirement ID(s):}}  R1, R2, R3, R4, R5.
 					
-\item{\textbf{Input:}} Set the inputs to the software as follows,
-
-$SP$ = 5
-~\newline$K_p$ = 1
-~\newline$K_i$ = 2
-~\newline$K_d$ = 0
-~\newline$T_\text{sim}$ = 30 s
-~\newline$t_\text{step}$ = 0.01 s
+\item{\textbf{Input:}} Set the inputs to the values specified in the `Input' columns 
+in Table-\ref{tab:tc-PD-2}.
 					
-\item{\textbf{Output:}}  Verify that the value in the last index of the following lists are,
+\item{\textbf{Output:}}  Verify that the outputs of the software matches the value specified in the `Output' 
+column of Table-\ref{tab:tc-PD-2}.
 
-$y(t)$ =  5 +/- 0.01
-~\newline$T_\text{elapsed}$  = 30 +/- 0.01 s
+\item{\textbf{Requirement ID(s):}}  FR: Input-Values, FR: Verify-Input-Values, FR: Calculate-Values, FR: Output-Values.
 
-\item{\textbf{Test Case Derivation:}}  The inputs of this test case have been calibrated 
-with a free PID simulation model \cite{Free_PID}. Therefore in this test case, at the end 
-of the simulation time, the Process Variable ($y(t)$) will be equal to the Set-Point. 
+\item{\textbf{Test Case Derivation:}}  This test case is to prove that each input to the software uniquely affects the output
+of the software.
 
-A relative error of 10\% is applied to the process variable to accommodate rounding off errors 
-and floating point representation errors. Similarly, the simulation should end in the specified time, 
-with a relative error of 10\% to accommodate rounding off errors, floating point representation errors, and
- operating system timer resolution.
+The output, ${y_{\text{t}}}$ refers to the last value of the output list.
+
+The outputs have been independently verified using a Simulink Model (\cite{Simulink}, 
+\cite{PD_Controller}). A relative error of 5\% is applied to accommodate rounding off errors,
+and floating point representation errors between the two software.
 
 \wss{Justify the expected value given in the Output field}
-
+					
 \item{\textbf{How test will be performed:}}  The test will be automated with Pytest as mentioned in 
-section \ref{sec_Tools}.
+section \ref{sec_Tools}. 
 
 \end{itemize}
 \end{itemize}
 
-\subsubsection{Simulation parameters test}
-This section tests the simulation parameters, namely, the step time and the simulation time.
+\subsubsection{Data and Control Coupling (DCCC) Analysis}
 
-\paragraph{Simulation step time test}
+This section tests the Data and Control Coupling between the modules. 
 
+\paragraph{Data Coupling}
 \begin{itemize}
-\item{TC-PID-4\\}
+\item{TC-PD-12\\}
 \begin{itemize}
-
-\item{\textbf{Control:}} Automatic
+\item{\textbf{Type:}} Manual, Inspection.
 					
 \item{\textbf{Initial State:}} None
 
-\item{\textbf{Requirement ID(s):}}  R1, R2, R3, R4, R5.
+\item{\textbf{Requirement ID(s):}} FR: Input-Values, FR: Verify-Input-Values, FR: Calculate-Values, FR: Output-Values.
 					
-\item{\textbf{Input:}} Set the input to the software as follows,
-
-$SP$ = 5
-~\newline$K_p$ = 1
-~\newline$K_i$ = 1
-~\newline$K_d$ = 0
-~\newline$T_\text{sim}$ = 10 s
-~\newline$t_\text{step}$ = 0.5 s
+\item{\textbf{Input/Condition:}}  Execute TC-PD-1. 
 					
-\item{\textbf{Output:}}  Verify that the difference between the subsequent values of the 
-$T_\text{elapsed}$ is 0.5 s.
+\item{\textbf{Output/Result:}} Analyze the Data Coupling is achieved between the modules.
 
-\item{\textbf{Test Case Derivation:}}  $t_\text{step}$ is the time for one iteration of the of the
-control loop; all computations are $t_\text{step}$ apart.
-
-A relative error of 10\% is applied to the process variable for loss
-of precision for rounding off errors and floating point representation
-errors. Similarly, the simulation should end in the specified time, with a 
-relative error of 10\% for rounding off errors, floating point 
-representation errors, and operating system timer resolution.
-
-\wss{Justify the expected value given in the Output field}
-
-\item{\textbf{How test will be performed:}}  The test will be automated using Pytest as specified in 
-section \ref{sec_Tools}.
-
+\item{\textbf{How test will be performed:}}  TC-PD-1 is executed with Pytest. The generated log file (log.txt)
+is examined for Data coupling.
 \end{itemize}
 \end{itemize}
+
+\paragraph{Control Coupling}
+\begin{itemize}
+\item{TC-PD-13\\}
+\begin{itemize}
+\item{\textbf{Type:}} Manual, Inspection.
+					
+\item{\textbf{Initial State:}} None
+
+\item{\textbf{Requirement ID(s):}} FR: Input-Values, FR: Verify-Input-Values, FR: Calculate-Values, FR: Output-Values.
+					
+\item{\textbf{Input/Condition:}}  Execute TC-PD-1. 
+					
+\item{\textbf{Output/Result:}} Analyze the Couple Coupling is achieved between the modules.
+
+\item{\textbf{How test will be performed:}}  TC-PD-1 is executed with Pytest. The generated log file (log.txt)
+is examined for Coupling coupling.
+\end{itemize}
+\end{itemize}
+
+
 ...
-
 \subsection{Tests for Nonfunctional Requirements}
 
 \wss{The nonfunctional requirements for accuracy will likely just reference the
@@ -424,66 +436,19 @@ This section contains the test cases for the non-functional requirements (sectio
 \wss{Tests related to usability could include conducting a usability test and
   survey.}
 
-\subsubsection{Software Quality Tests}
-		
-\paragraph{Statement Coverage Test}
-
-\begin{itemize}
-\item{TC-PID-5\\}
-\begin{itemize}
-
-\item{\textbf{Type:}} Dynamic, Automated.
-					
-\item{\textbf{Initial State:}} None
-
-\item{\textbf{Requirement ID(s):}} NFR-6
-					
-\item{\textbf{Input/Condition:}}  Execute test cases TC-PID-1 to TC-PID-5.
-					
-\item{\textbf{Output/Result:}} Verify that the statement coverage is 100\%.
-
-\item{\textbf{How test will be performed:}}  This test will be executed with Pytest \cite{Pytest} in 
-the Pycharm \cite{Pycharm} IDE. The tests should be executed with the code coverage 
-option. 
-
-\end{itemize}
-\end{itemize}
-
-\paragraph{Static code analysis}
-
-\begin{itemize}
-\item{TC-PID-6\\}
-\begin{itemize}
-
-\item{\textbf{Type:}} Static, Automated.
-					
-\item{\textbf{Initial State:}} None
-
-\item{\textbf{Requirement ID(s):}} NFR-6
-					
-\item{\textbf{Input/Condition:}}  Execute TC-PID-2
-					
-\item{\textbf{Output/Result:}} Verify that the inspection report does not contain any warnings.
-
-\item{\textbf{How test will be performed:}}  This test will be executed in PyCharm \cite{Pycharm}. 
-The default profile for verification should be selected. 
-
-\end{itemize}
-\end{itemize}
-
 \subsubsection{Portability Test}
 
 \begin{itemize}
-\item{TC-PID-7\\}
+\item{TC-PD-3\\}
 \begin{itemize}
 
-\item{\textbf{Type:}} Manual, Dynamic.
+\item{\textbf{Type:}} Semi-Automated, Dynamic.
 					
 \item{\textbf{Initial State:}} None
 
-\item{\textbf{Requirement ID(s):}} NFR-1
+\item{\textbf{Requirement ID(s):}} NFR: Portable
 					
-\item{\textbf{Input/Condition:}}  Execute TC-PID-2 in each of the the following 
+\item{\textbf{Input/Condition:}}  Execute TC-PD-1 and TC-PD-2 in each of the the following 
 operating systems,
 
 \begin{enumerate}
@@ -492,35 +457,80 @@ operating systems,
 \end {enumerate}
 					
 \item{\textbf{Output/Result:}} Verify that on each of the operating systems the test 
-case TC-PID-2 passes. 
+case TC-PD-1 and TC-PD-2 passes. 
 
-\item{\textbf{How test will be performed:}}  Manual execution of the test script on 
-each of the operating systems.
+\item{\textbf{How test will be performed:}}  On each of the Operating systems,
+execute the functional test suite using  Pytest \cite{Pytest}. 
 
 \end{itemize}
 \end{itemize}
 
-\subsubsection{Modularity Test}
+
+\subsubsection{Maintainability tests}
+
+\paragraph{Modularity Test}
 \begin{itemize}
-\item{TC-PID-8\\}
+\item{TC-PD-4\\}
 \begin{itemize}
-\item{\textbf{Type:}} Manual.
+\item{\textbf{Type:}} Manual, Inspection.
 					
 \item{\textbf{Initial State:}} None
 
-\item{\textbf{Requirement ID(s):}} NFR-2
+\item{\textbf{Requirement ID(s):}} NFR: Maintainable
 					
-\item{\textbf{Input/Condition:}}  Execute TC-PID-2.
+\item{\textbf{Input/Condition:}}  N/A
 					
-\item{\textbf{Output/Result:}} Verify that the test case TC-PID-2 passes.
+\item{\textbf{Output/Result:}} Verify that the source code is modular.
+
+\item{\textbf{How test will be performed:}}  
+Review the source code files. Ensure that each functionality of the software is 
+handled in its own module.
+\end{itemize}
+\end{itemize}
+
+\paragraph{Linting}
+
+\begin{itemize}
+\item{TC-PD-5\\}
+\begin{itemize}
+
+\item{\textbf{Type:}} Static, Automated.
+					
+\item{\textbf{Initial State:}} None
+
+\item{\textbf{Requirement ID(s):}} NFR: Maintainable
+					
+\item{\textbf{Input/Condition:}}  The source code files.
+					
+\item{\textbf{Output/Result:}} Verify that the source code does not contain any PEP-8 violations.
+
+\item{\textbf{How test will be performed:}}   This test will be automated using the 
+Flake8 \cite{Flake8} tool.
+
+\end{itemize}
+\end{itemize}
+
+\paragraph{Documented}
+\begin{itemize}
+\item{TC-PD-6\\}
+\begin{itemize}
+\item{\textbf{Type:}} Inspection
+					
+\item{\textbf{Initial State:}} None
+
+\item{\textbf{Requirement ID(s):}} NFR: Maintainable
+					
+\item{\textbf{Input/Condition:}}  The PDF API reference generated with Doxygen.
+					
+\item{\textbf{Output/Result:}} Verify that all the classes, methods and modules in the source
+code are documented in the API reference.
 
 \item{\textbf{How test will be performed:}}  
 \begin{enumerate}
-\item Create a new python script. This script may be one of the 
-systems tests listed in section \ref{sec_systems_tests}. 
-\item Import the PID controller software as a module in the created script.
-\item Feed the same inputs as specified in TC-PID-2.
-\end{enumerate}
+\item Run `make doc` to generate the Doxygen Latex files.
+\item Navigate to the Latex directory and run `make' to generate the Doxygen PDF file.
+\item Inspect the PDF file, ensure all the functions in the source code are adequately documented. 
+\end {enumerate}
 \end{itemize}
 \end{itemize}
 
@@ -528,17 +538,17 @@ systems tests listed in section \ref{sec_systems_tests}.
 
 \paragraph{Memory leak check}
 \begin{itemize}
-\item{TC-PID-9\\}
+\item{TC-PD-7\\}
 \begin{itemize}
 \item{\textbf{Type:}} Automated, Dynamic.
 					
 \item{\textbf{Initial State:}} None
 
-\item{\textbf{Requirement ID(s):}} NFR-3
+\item{\textbf{Requirement ID(s):}} NFR: Secure
 					
-\item{\textbf{Input/Condition:}}  Execute the test script of TC-PID-2.
+\item{\textbf{Input/Condition:}}  Execute the test case of TC-PD-1-1.
 					
-\item{\textbf{Output/Result:}} Verify that the test case TC-PID-2 passes and there
+\item{\textbf{Output/Result:}} Verify that the test case TC-PD-1-1 passes and there
 are no memory leaks identified in the  report generated by Valgrind.
 
 \item{\textbf{How test will be performed:}} Valgrind \cite{Valgrind} is used to fork
@@ -548,15 +558,15 @@ the python script. After the execution, a report is generated by Valgrind.
 
 \paragraph{Divide by-zero check}
 \begin{itemize}
-\item{TC-PID-10\\}
+\item{TC-PD-8\\}
 \begin{itemize}
 \item{\textbf{Type:}} Static, Inspection.
 					
 \item{\textbf{Initial State:}} None
 
-\item{\textbf{Requirement ID(s):}} NFR-3
+\item{\textbf{Requirement ID(s):}}  NFR: Secure
 					
-\item{\textbf{Input/Condition:}}  Source code of the PID controller.
+\item{\textbf{Input/Condition:}}  Source code of the PD controller.
 					
 \item{\textbf{Output/Result:}} For every division in the source code, verify that
 the denominator is tested for a non zero value. 
@@ -565,17 +575,19 @@ the denominator is tested for a non zero value.
 \end{itemize}
 \end{itemize}
 
+---
+
 \paragraph{Negative square root check}
 \begin{itemize}
-\item{TC-PID-11\\}
+\item{TC-PD-9\\}
 \begin{itemize}
 \item{\textbf{Type:}} Static analysis and Inspection
 					
 \item{\textbf{Initial State:}} None
 
-\item{\textbf{Requirement ID(s):}} NFR-3
+\item{\textbf{Requirement ID(s):}}  NFR: Secure
 					
-\item{\textbf{Input/Condition:}}  Source code of the PID controller.
+\item{\textbf{Input/Condition:}}  Source code of the PD controller.
 					
 \item{\textbf{Output/Result:}} For every square root function in the source code,
 verify that the operands are tested for negative values before the function call.
@@ -583,39 +595,21 @@ verify that the operands are tested for negative values before the function call
 \item{\textbf{How test will be performed:}}  Manual inspection of the source code.
 \end{itemize}
 \end{itemize}
-\subsubsection{Maintainability test}
 
-\begin{itemize}
-\item{TC-PID-11\\}
-\begin{itemize}
-\item{\textbf{Type:}} Inspection
-					
-\item{\textbf{Initial State:}} None
-
-\item{\textbf{Requirement ID(s):}} NFR-4
-					
-\item{\textbf{Input/Condition:}}  The source code, and the User's Guide of the PID controller.
-					
-\item{\textbf{Output/Result:}} Verify that all the classes, methods and modules in the source
-code are documented in the User's Guide.
-
-\item{\textbf{How test will be performed:}}  Manual inspection of the source code and the 
-User's guide.
-\end{itemize}
-\end{itemize}
+----
 
 \subsubsection{Verifiability test}
 
 \begin{itemize}
-\item{TC-PID-13\\}
+\item{TC-PD-10\\}
 \begin{itemize}
 \item{\textbf{Type:}} Inspection
 					
 \item{\textbf{Initial State:}} None
 
-\item{\textbf{Requirement ID(s):}} NFR-5
+\item{\textbf{Requirement ID(s):}} NFR: Verifiable
 					
-\item{\textbf{Input/Condition:}} VnV report and the SRS of the PID Controller.
+\item{\textbf{Input/Condition:}} VnV report and the SRS of the PD Controller.
 					
 \item{\textbf{Output/Result:}} Verify that for each requirement in the SRS, there
 exists at-least one test case in the VnV report.
@@ -623,6 +617,31 @@ exists at-least one test case in the VnV report.
 \item{\textbf{How test will be performed:}} Manual inspection of the documents.
 \end{itemize}
 \end{itemize}
+
+\paragraph{Statement Coverage Test}
+
+\begin{itemize}
+\item{TC-PD-11\\}
+\begin{itemize}
+
+\item{\textbf{Type:}} Dynamic, Automated.
+					
+\item{\textbf{Initial State:}} None
+
+\item{\textbf{Requirement ID(s):}} NFR: Verifiable
+					
+\item{\textbf{Input/Condition:}}  Execute test cases TC-PD-1 and TC-PD-2.
+					
+\item{\textbf{Output/Result:}} Verify that the statement coverage is 100\%.
+
+\item{\textbf{How test will be performed:}}  This test will be executed with Pytest \cite{Pytest} and 
+the Pytest-Cov \cite{PyTest-Cov}. The tests should be executed with the `--cov' command line option.
+
+\end{itemize}
+\end{itemize}
+
+
+
 \subsection{Traceability Between Test Cases and Requirements}
 
 \wss{Provide a table that shows which test cases are supporting which
@@ -631,24 +650,26 @@ exists at-least one test case in the VnV report.
 Table-\ref{tblTrace} contains the mapping of requirements to test cases.
   
 \begin{table}[]
+\begin{adjustbox}{width=1.29\textwidth}
+\begin{tabular}{c|c|c|c|c|c|c|c|c|}
+ & Input-Values & Verify-Input-Values & Calculate-Values & Output-Values & Portable & Secure & Maintainable & Verifiable \\ \hline
+TC-PD-1 & X & X & X  & X  &  &  &  &  \\
+TC-PD-2 & X  & X  & X & X &  &  &  &  \\
+TC-PD-3  &  &  &  &   & X  &  &  &  \\
+TC-PD-4  &  &  &  &  &  &  &X  &  \\
+TC-PD-5  &  &  &  &  &  &  &X  &  \\
+TC-PD-6  &  &  &  &  &  &  &X  &  \\
+TC-PD-7  &  &  &  &  &  &X  &  &  \\
+TC-PD-8  &  &  &  &  &  &X  &  &  \\
+TC-PD-9  &  &  &  &  &  &X  &  &  \\
+TC-PD-10 &  &  &  &  &  &  &  &X  \\
+TC-PD-11 &  &  &  &  &  &  &  &X \\
+TC-PD-12 & X & X & X  & X  &  &  &  &  \\
+TC-PD-13 & X  & X  & X & X &  &  &  &  \\
+\end{tabular}
+\end{adjustbox}
 \caption{Requirements vs Test Cases Trace Matrix}
 \label{tblTrace}
-\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
-\hline
-          & R1 & R2 & R3 & R4 & R5 & NFR1 & NFR2 & NFR3 & NFR4 & NFR5 & NFR6 \\ \hline
-TC-PID-1  & X  & X  & X  & X  & X  &      &      &      &      &      &      \\ \hline
-TC-PID-2  & X  & X  & X  & X  & X  &      &      &      &      &      &      \\ \hline
-TC-PID-4  & X  & X  & X  & X  & X  &      &      &      &      &      &      \\ \hline
-TC-PID-5  & X  & X  & X  & X  & X  &      &      &      &      &      &      \\ \hline
-TC-PID-6  &    &    &    &    &    &      &      &      &      &      & X    \\ \hline
-TC-PID-7  &    &    &    &    &    & X    &      &      &      &      &      \\ \hline
-TC-PID-8  &    &    &    &    &    &      & X    &      &      &      &      \\ \hline
-TC-PID-9  &    &    &    &    &    &      &      & X    &      &      &      \\ \hline
-TC-PID-10 &    &    &    &    &    &      &      & X    &      &      &      \\ \hline
-TC-PID-11 &    &    &    &    &    &      &      & X    &      &      &      \\ \hline
-TC-PID-12 &    &    &    &    &    &      &      &      & X    &      &      \\ \hline
-TC-PID-13 &    &    &    &    &    &      &      &      &      & X    &      \\ \hline
-\end{tabular}
 \end{table}
 
 \section{Unit Test Description}  \label{sec_unit_tests}
@@ -658,6 +679,26 @@ TC-PID-13 &    &    &    &    &    &      &      &      &      & X    &      \\ 
 \wss{This section should not be filled in until after the MIS has
   been completed.}
 
+The source code for the \progname{} has been auto-generated by the 
+Drasil software (\cite{Drasil}). The generated software contains the following modules,
+
+\begin{itemize}
+
+\item Calculations.py  - Provides functions for calculating the outputs.
+
+\item Constants.py  - Provides the structure for holding constant values.
+
+\item Control.py  - Controls the flow of the program.
+
+\item InputParameters.py - Provides the function for reading inputs and the function 
+for checking the physical constraints on the input.
+
+\item OutputFormat.py  -  Provides the function for writing outputs.
+
+\end{itemize}
+
+Automated unit-testing will be performed on select modules.
+
 \subsection{Unit Testing Scope}
 
 \wss{What modules are outside of the scope.  If there are modules that are
@@ -666,118 +707,81 @@ TC-PID-13 &    &    &    &    &    &      &      &      &      & X    &      \\ 
   have a lower priority for verification than others.  If this is the case,
   explain your rationale for the ranking of module importance.}
 
+The following areas were tested as part of the Systems testing,
+
+\begin{itemize}
+\item Software correctness and physical constraints were tested in test cases TC-PD-1 and TC-PD-2.
+\item Statement coverage of 100\% was tested in test cases TC-PD-11.
+\item Coupling was tested in TC-PD-12 and TC-PD-13.
+\end{itemize}
+
+Therefore the only additional testing that is necessary for the analysis of the Step Time (${t_{\text{step}}}$),
+and Simulation Time (${t_{\text{sim}}}$). For this, the Calculations.py module will be unit tested.
+
 \subsection{Tests for Functional Requirements}
 
 \wss{Most of the verification will be through automated unit testing.  If
   appropriate specific modules can be verified by a non-testing based
   technique.  That can also be documented in this section.}
 
-\subsubsection{Module 1}
+\subsubsection{Calculations.py}
 
 \wss{Include a blurb here to explain why the subsections below cover the module.
   References to the MIS would be good.  You will want tests from a black box
   perspective and from a white box perspective.  Explain to the reader how the
   tests were selected.}
 
-\begin{enumerate}
-
-\item{test-id1\\}
-
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
-
-\begin{enumerate}
-\item{\textbf{Initial State:}} 
-					
-\item{\textbf{Input:}} 
-					
-\item{\textbf{Output:}}  \wss{The expected result for the given inputs}
-
-\item{\textbf{Test Case Derivation:}}  \wss{Justify the expected value given in the Output field}
-
-\item{\textbf{How test will be performed:}}  
-
-\end{enumerate}
-					
-\item{test-id2\\}
-
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
-					
-\item{\textbf{Initial State:}} 
-					
-\item{\textbf{Input:}} 
-					
-\item{\textbf{Output:}}  \wss{The expected result for the given inputs}
-
-\item{\textbf{Test Case Derivation:}}  \wss{Justify the expected value given in the Output field}
-
-\item{\textbf{How test will be performed:}}  
-
-\item{...\\}
-    
-\end{enumerate}
-
-\subsubsection{Module 2}
-
-...
-
-\subsection{Tests for Nonfunctional Requirements}
-
-\wss{If there is a module that needs to be independently assessed for
-  performance, those test cases can go here.  In some projects, planning for
-  nonfunctional tests of units will not be that relevant.}
-
-\wss{These tests may involve collecting performance data from previously
-  mentioned functional tests.}
-
-\subsubsection{Module ?}
-		
-\begin{enumerate}
-
-\item{test-id1\\}
-
-Type: \wss{Functional, Dynamic, Manual, Automatic, Static etc. Most will
-  be automatic}
-
-\begin{itemize}	
-\item{\textbf{Initial State:}} 
-					
-\item{\textbf{Input/Condition:}}  
-					
-Output/Result: 
-					
-\item{\textbf{How test will be performed:}}  
-
-\end{itemize}
-\end{enumerate}
-					
-\begin{enumerate}
-\item{test-id2\\}
-
-Type: Functional, Dynamic, Manual, Static etc.
+This section tests for the Step Time (${t_{\text{step}}}$) through automated unit testing.
 
 \begin{itemize}
+\item{TC-PD-11\\}
+\begin{itemize}
+
+\item{\textbf{Type:}}  Automated, Black Box.
 					
-\item{\textbf{Initial State:}} 
+\item{\textbf{Initial State:}} None
+
+\item{\textbf{Requirement ID(s):}}  FR: Calculate-Values
 					
-\item{\textbf{Input:}} 
-					
-\item{\textbf{Output:}}  
-					
-\item{\textbf{How test will be performed:}}  
+\item{\textbf{Input/Condition:}}  Set the input as follows,
+
+\begin{itemize}
+\item ${r_{\text{t}}}$ = 1
+\item ${K_{\text{p}}}$ = 10
+\item ${K_{\text{d}}}$ = 1
+\item ${t_{\text{step}}}$ = 0.01
+\item ${t_{\text{sim}}}$ = 1 
+\end{itemize}
+
+\item{\textbf{Output/Result:}} Verify that the length of the list ${y_{\text{t}}}$ is 101.
+
+\item{\textbf{Test Case Derivation:}} The ODE is integrated every  ${t_{\text{step}}}$ seconds 
+until  ${t_{\text{sim}}}$ seconds. Therefore the no of samples will be  
+((${t_{\text{sim}}}$/ ${t_{\text{step}}}$) + 1), where 1 is for the initial value.
+
+\item{\textbf{How test will be performed:}}  This test will be executed with Pytest \cite{Pytest}.
 
 \end{itemize}
-\end{enumerate}
+\end{itemize}
 
-\subsubsection{Module ?}
-
-...
-
+					
 \subsection{Traceability Between Test Cases and Modules}
 
 \wss{Provide evidence that all of the modules have been considered.}
 				
+Table-\ref{tblTrace2} contains the mapping of requirements to modules.
+  
+\begin{table}[]
+\begin{adjustbox}{width=1.29\textwidth}
+\begin{tabular}{c|c|c|c|c|c|c|c|c|}
+ & Input-Values & Verify-Input-Values & Calculate-Values & Output-Values & Portable & Secure & Maintainable & Verifiable \\ \hline
+Calculations.py &  &  & X  &   &  &  &  &  \\
+\end{tabular}
+\end{adjustbox}
+\caption{Requirements vs Modules Trace Matrix}
+\label{tblTrace2}
+\end{table}
+
 
 \bibliographystyle{abbrvnat}
 \bibliography {../../refs/References}
