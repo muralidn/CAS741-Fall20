@@ -277,7 +277,7 @@ tests and simulation parameters test.
   covers tests for input constraints, you should reference the data constraints
   table in the SRS.}
   
-This section verifies section 4.2.6, and requirements R1 and R2 of section 5.1
+This section verifies section 4.2.6, and the functional requirements of section 5.1
 in the SRS \cite {SRS}. Various inputs are provided to the Software Under Test, 
 and the output is verified. 
 		
@@ -313,15 +313,17 @@ TC-PD-1-8 & 1       & 20      & 1       & 0.01   & 60.0001 & N/A    & InputError
 in Table-\ref{tab:tc-PD-1}.
 					
 \item{\textbf{Output:}}  Verify that the outputs of the software match the 
-values specified in the `Output' columns of Table-\ref{tab:tc-PD-1}.
+values specified in the `Output' columns of Table-\ref{tab:tc-PD-1} within the
+allowable margin of error.
 
 \wss{The expected result for the given inputs}
 
 \item{\textbf{Requirement ID(s):}}  FR: Input-Values, FR: Verify-Input-Values, FR: Calculate-Values, FR: Output-Values.
 
 \item{\textbf{Test Case Derivation:}}  This test case is to test the behavior of the system 
-when the system is supplied with inputs that are out of range. The system should produce an InputError, when
-the supplied values exceeds the physical constraints,
+when the system is supplied with inputs that are outside the physical constraints, as specified in Table-4
+in the SRS \cite {SRS}. In the test cases TC-PD-1-2 to TC-PD-1-7, the system should produce an InputError, as
+the values supplied are beyond the physical constraints of the input signals.
 
 The output, ${y_{\text{t}}}$ refers to the last value of the output list.
 
@@ -366,7 +368,7 @@ TC-PD-2-4 & 20   & 10   & 1     & 0.01   & 5      & 18.17      \\
 in Table-\ref{tab:tc-PD-2}.
 					
 \item{\textbf{Output:}}  Verify that the outputs of the software matches the value specified in the `Output' 
-column of Table-\ref{tab:tc-PD-2}.
+column of Table-\ref{tab:tc-PD-2} within the allowable margin of error.
 
 \item{\textbf{Requirement ID(s):}}  FR: Input-Values, FR: Verify-Input-Values, FR: Calculate-Values, FR: Output-Values.
 
