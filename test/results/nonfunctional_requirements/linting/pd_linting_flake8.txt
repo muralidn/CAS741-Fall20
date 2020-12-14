@@ -1,0 +1,30 @@
+$ flake8 ../../src/
+../../src/Calculations.py:1:1: E266 too many leading '#' for block comment
+../../src/Calculations.py:8:1: E266 too many leading '#' for block comment
+../../src/Calculations.py:9:80: E501 line too long (115 > 79 characters)
+../../src/Calculations.py:15:1: E302 expected 2 blank lines, found 1
+../../src/Calculations.py:34:1: W293 blank line contains whitespace
+../../src/Calculations.py:37:1: W293 blank line contains whitespace
+../../src/Calculations.py:44:80: E501 line too long (96 > 79 characters)
+../../src/Calculations.py:55:1: W293 blank line contains whitespace
+../../src/Constants.py:1:1: E266 too many leading '#' for block comment
+../../src/Constants.py:4:1: E266 too many leading '#' for block comment
+../../src/Control.py:1:1: E266 too many leading '#' for block comment
+../../src/InputParameters.py:1:1: E266 too many leading '#' for block comment
+../../src/InputParameters.py:3:80: E501 line too long (117 > 79 characters)
+../../src/InputParameters.py:4:1: E266 too many leading '#' for block comment
+../../src/InputParameters.py:6:80: E501 line too long (112 > 79 characters)
+../../src/InputParameters.py:18:1: W293 blank line contains whitespace
+../../src/InputParameters.py:56:1: W293 blank line contains whitespace
+../../src/InputParameters.py:59:1: E266 too many leading '#' for block comment
+../../src/InputParameters.py:60:80: E501 line too long (115 > 79 characters)
+../../src/InputParameters.py:65:1: E302 expected 2 blank lines, found 1
+../../src/InputParameters.py:84:1: W293 blank line contains whitespace
+../../src/InputParameters.py:85:22: E203 whitespace before ':'
+../../src/InputParameters.py:93:23: E203 whitespace before ':'
+../../src/InputParameters.py:101:22: E203 whitespace before ':'
+../../src/InputParameters.py:109:55: E203 whitespace before ':'
+../../src/InputParameters.py:121:41: E203 whitespace before ':'
+../../src/OutputFormat.py:1:1: E266 too many leading '#' for block comment
+../../src/OutputFormat.py:4:1: E266 too many leading '#' for block comment
+../../src/OutputFormat.py:13:1: W293 blank line contains whitespace

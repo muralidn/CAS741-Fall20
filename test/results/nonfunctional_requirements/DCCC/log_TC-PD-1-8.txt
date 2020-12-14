@@ -1,0 +1,16 @@
+var 'filename' assigned ..\data\inputs\TC-PD-1-8.txt in module Control
+function get_input called with inputs: {
+  filename = ..\data\inputs\TC-PD-1-8.txt
+  }
+var 'r_t' assigned 1.0 in module InputParameters
+var 'K_d' assigned 1.0 in module InputParameters
+var 'K_p' assigned 20.0 in module InputParameters
+var 't_step' assigned 0.01 in module InputParameters
+var 't_sim' assigned 60.0001 in module InputParameters
+function input_constraints called with inputs: {
+  r_t = 1.0, 
+  K_d = 1.0, 
+  K_p = 20.0, 
+  t_step = 0.01, 
+  t_sim = 60.0001
+  }
