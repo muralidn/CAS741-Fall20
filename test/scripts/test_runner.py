@@ -15,6 +15,7 @@ if platform == "linux" or platform == "linux2" or platform == "darwin":
     PD_SCRIPT_PATH = r"../../src/Control.py"
     PD_OUTPUT_FILE_PATH = r"output.txt"
     PD_LOG_FILE_PATH = r"log.txt"
+    PYTHON_BINARY = r"python"
 else:
     # Windows...
     INPUT_FILES_ROOT = r"..\data\inputs"
@@ -22,6 +23,7 @@ else:
     PD_SCRIPT_PATH = r"..\..\src\Control.py"
     PD_OUTPUT_FILE_PATH = r"output.txt"
     PD_LOG_FILE_PATH = r"log.txt"
+    PYTHON_BINARY = r"python3"
 
 test_lookup_table = dict()
 
@@ -64,7 +66,7 @@ def run(test_case, tolerance=0.001):
         ip_contents = ip_contents.replace("\n","")
         ip_contents = ip_contents.replace("# ",", \n")
 
-    args = ["python", PD_SCRIPT_PATH, ip_file]
+    args = [PYTHON_BINARY, PD_SCRIPT_PATH, ip_file]
     p = subprocess.Popen(args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     try:
         pprint.pprint("Inputs:")
