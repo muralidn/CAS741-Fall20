@@ -52,6 +52,13 @@
 \toprule {\bf Date} & {\bf Version} & {\bf Notes}\\
 \midrule
 28-Oct-20 1 & 1.0 & The first draft of the VnV plan\\
+14-Dec-20 1 & 2.0 & This versions contains the following changes,
+\begin{itemize}
+\item Changed scope to PD controller.
+\item Incorporated Dr.Smith's and reviewers feedback.
+\item Added more test cases.
+\end{itemize}
+\\
 \bottomrule
 \end{tabularx}
 
@@ -380,49 +387,6 @@ section \ref{sec_Tools}.
 \end{itemize}
 \end{itemize}
 
-\subsubsection{Data and Control Coupling (DCCC) Analysis}
-
-This section tests the Data and Control Coupling between the modules. 
-
-\paragraph{Data Coupling}
-\begin{itemize}
-\item{TC-PD-12\\}
-\begin{itemize}
-\item{\textbf{Type:}} Manual, Inspection.
-					
-\item{\textbf{Initial State:}} None
-
-\item{\textbf{Requirement ID(s):}} FR: Input-Values, FR: Verify-Input-Values, FR: Calculate-Values, FR: Output-Values.
-					
-\item{\textbf{Input/Condition:}}  Execute TC-PD-1. 
-					
-\item{\textbf{Output/Result:}} Analyze the Data Coupling is achieved between the modules.
-
-\item{\textbf{How test will be performed:}}  TC-PD-1 is executed with Pytest. The generated log file (log.txt)
-is examined for Data coupling.
-\end{itemize}
-\end{itemize}
-
-\paragraph{Control Coupling}
-\begin{itemize}
-\item{TC-PD-13\\}
-\begin{itemize}
-\item{\textbf{Type:}} Manual, Inspection.
-					
-\item{\textbf{Initial State:}} None
-
-\item{\textbf{Requirement ID(s):}} FR: Input-Values, FR: Verify-Input-Values, FR: Calculate-Values, FR: Output-Values.
-					
-\item{\textbf{Input/Condition:}}  Execute TC-PD-1. 
-					
-\item{\textbf{Output/Result:}} Analyze the Couple Coupling is achieved between the modules.
-
-\item{\textbf{How test will be performed:}}  TC-PD-1 is executed with Pytest. The generated log file (log.txt)
-is examined for Coupling coupling.
-\end{itemize}
-\end{itemize}
-
-
 ...
 \subsection{Tests for Nonfunctional Requirements}
 
@@ -640,6 +604,47 @@ the Pytest-Cov \cite{PyTest-Cov}. The tests should be executed with the `--cov' 
 \end{itemize}
 \end{itemize}
 
+\paragraph{Data Coupling and Control Coupling (DCCC) Analysis}
+
+The following tests the Data and Control Coupling between the modules. 
+
+\paragraph{Data Coupling}
+\begin{itemize}
+\item{TC-PD-12\\}
+\begin{itemize}
+\item{\textbf{Type:}} Manual, Inspection.
+					
+\item{\textbf{Initial State:}} None
+
+\item{\textbf{Requirement ID(s):}} NFR: Verifiable
+					
+\item{\textbf{Input/Condition:}}  Execute TC-PD-1. 
+					
+\item{\textbf{Output/Result:}} Analyze the Data Coupling is achieved between the modules.
+
+\item{\textbf{How test will be performed:}}  TC-PD-1 is executed with Pytest. The generated log file (log.txt)
+is examined for Data coupling.
+\end{itemize}
+\end{itemize}
+
+\paragraph{Control Coupling}
+\begin{itemize}
+\item{TC-PD-13\\}
+\begin{itemize}
+\item{\textbf{Type:}} Manual, Inspection.
+					
+\item{\textbf{Initial State:}} None
+
+\item{\textbf{Requirement ID(s):}} NFR: Verifiable
+					
+\item{\textbf{Input/Condition:}}  Execute TC-PD-1. 
+					
+\item{\textbf{Output/Result:}} Analyze the Couple Coupling is achieved between the modules.
+
+\item{\textbf{How test will be performed:}}  TC-PD-1 is executed with Pytest. The generated log file (log.txt)
+is examined for Coupling coupling.
+\end{itemize}
+\end{itemize}
 
 
 \subsection{Traceability Between Test Cases and Requirements}
@@ -664,8 +669,8 @@ TC-PD-8  &  &  &  &  &  &X  &  &  \\
 TC-PD-9  &  &  &  &  &  &X  &  &  \\
 TC-PD-10 &  &  &  &  &  &  &  &X  \\
 TC-PD-11 &  &  &  &  &  &  &  &X \\
-TC-PD-12 & X & X & X  & X  &  &  &  &  \\
-TC-PD-13 & X  & X  & X & X &  &  &  &  \\
+TC-PD-12 &  &  &   &   &  &  &  &X  \\
+TC-PD-13 &   &  &  &  &  &  &  &X \\
 \end{tabular}
 \end{adjustbox}
 \caption{Requirements vs Test Cases Trace Matrix}
