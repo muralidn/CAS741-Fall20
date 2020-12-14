@@ -435,8 +435,34 @@ execute the functional test suite using  Pytest \cite{Pytest}.
 \subsubsection{Maintainability tests}
 
 \paragraph{Modularity Test}
+
+\paragraph{Data Coupling and Control Coupling (DCCC) Analysis}
+
+The following tests the Data and Control Coupling between the modules. Proving Data Coupling indicates that
+the modules are modular. 
+
+\paragraph{Data Coupling}
 \begin{itemize}
-\item{TC-PD-4\\}
+\item{TC-PD-12\\}
+\begin{itemize}
+\item{\textbf{Type:}} Manual, Inspection.
+					
+\item{\textbf{Initial State:}} None
+
+\item{\textbf{Requirement ID(s):}}  NFR: Maintainable
+					
+\item{\textbf{Input/Condition:}}  Execute TC-PD-1. 
+					
+\item{\textbf{Output/Result:}} Analyze the data coupling between the modules.
+
+\item{\textbf{How the test will be performed:}}  TC-PD-1 is executed with Pytest. The generated log file (log.txt)
+is examined for data coupling.
+\end{itemize}
+\end{itemize}
+
+\paragraph{Control Coupling}
+\begin{itemize}
+\item{TC-PD-13\\}
 \begin{itemize}
 \item{\textbf{Type:}} Manual, Inspection.
 					
@@ -444,13 +470,12 @@ execute the functional test suite using  Pytest \cite{Pytest}.
 
 \item{\textbf{Requirement ID(s):}} NFR: Maintainable
 					
-\item{\textbf{Input/Condition:}}  N/A
+\item{\textbf{Input/Condition:}}  Execute TC-PD-1. 
 					
-\item{\textbf{Output/Result:}} Verify that the source code is modular.
+\item{\textbf{Output/Result:}} Analyze the control coupling between the modules.
 
-\item{\textbf{How the test will be performed:}}  
-Review the source code files. Ensure that each functionality of the software is 
-handled in a separate module.
+\item{\textbf{How the test will be performed:}}  TC-PD-1 is executed with Pytest. The generated log file (log.txt)
+is examined for control coupling.
 \end{itemize}
 \end{itemize}
 
@@ -566,6 +591,8 @@ verify that the operands are tested for negative values before the function call
 
 \subsubsection{Verifiability test}
 
+\paragraph{Traceability}
+
 \begin{itemize}
 \item{TC-PD-10\\}
 \begin{itemize}
@@ -606,49 +633,6 @@ the Pytest-Cov \cite{PyTest-Cov}. The tests should be executed with the `--cov' 
 \end{itemize}
 \end{itemize}
 
-\paragraph{Data Coupling and Control Coupling (DCCC) Analysis}
-
-The following tests the Data and Control Coupling between the modules. 
-
-\paragraph{Data Coupling}
-\begin{itemize}
-\item{TC-PD-12\\}
-\begin{itemize}
-\item{\textbf{Type:}} Manual, Inspection.
-					
-\item{\textbf{Initial State:}} None
-
-\item{\textbf{Requirement ID(s):}} NFR: Verifiable
-					
-\item{\textbf{Input/Condition:}}  Execute TC-PD-1. 
-					
-\item{\textbf{Output/Result:}} Analyze the Data Coupling is achieved between the modules.
-
-\item{\textbf{How the test will be performed:}}  TC-PD-1 is executed with Pytest. The generated log file (log.txt)
-is examined for Data coupling.
-\end{itemize}
-\end{itemize}
-
-\paragraph{Control Coupling}
-\begin{itemize}
-\item{TC-PD-13\\}
-\begin{itemize}
-\item{\textbf{Type:}} Manual, Inspection.
-					
-\item{\textbf{Initial State:}} None
-
-\item{\textbf{Requirement ID(s):}} NFR: Verifiable
-					
-\item{\textbf{Input/Condition:}}  Execute TC-PD-1. 
-					
-\item{\textbf{Output/Result:}} Analyze the Couple Coupling is achieved between the modules.
-
-\item{\textbf{How the test will be performed:}}  TC-PD-1 is executed with Pytest. The generated log file (log.txt)
-is examined for Coupling coupling.
-\end{itemize}
-\end{itemize}
-
-
 \subsection{Traceability Between Test Cases and Requirements}
 
 \wss{Provide a table that shows which test cases are supporting which
@@ -663,7 +647,6 @@ Table-\ref{tblTrace} contains the mapping of requirements to test cases.
 TC-PD-1 & X & X & X  & X  &  &  &  &  \\
 TC-PD-2 & X  & X  & X & X &  &  &  &  \\
 TC-PD-3  &  &  &  &   & X  &  &  &  \\
-TC-PD-4  &  &  &  &  &  &  &X  &  \\
 TC-PD-5  &  &  &  &  &  &  &X  &  \\
 TC-PD-6  &  &  &  &  &  &  &X  &  \\
 TC-PD-7  &  &  &  &  &  &X  &  &  \\
@@ -722,7 +705,8 @@ The following areas were tested as part of the Systems testing,
 \item Coupling was tested in TC-PD-12 and TC-PD-13.
 \end{itemize}
 
-Therefore the only additional testing that is necessary for the analysis of the Step Time (${t_{\text{step}}}$),
+These tests adequately prove the correctness of the modules and the dataflow between them. Therefore the only 
+additional testing that is necessary for the analysis of the Step Time (${t_{\text{step}}}$),
 and Simulation Time (${t_{\text{sim}}}$). For this, the Calculations.py module will be unit tested.
 
 \subsection{Tests for Functional Requirements}
@@ -782,7 +766,11 @@ Table-\ref{tblTrace2} contains the mapping of requirements to modules.
 \begin{adjustbox}{width=1.29\textwidth}
 \begin{tabular}{c|c|c|c|c|c|c|c|c|}
  & Input-Values & Verify-Input-Values & Calculate-Values & Output-Values & Portable & Secure & Maintainable & Verifiable \\ \hline
-Calculations.py &  &  & X  &   &  &  &  &  \\
+Calculations.py	      &  &  & X  &   &  &  &  &  \\
+Constants.py	      &  &  & X  &   &  &  &  &  \\
+Control.py		      &X  &  &  &   &  &  &  &  \\
+InputParameters.py  &X  &X  &  &   &  &  &  &  \\
+OutputFormat.py &   &  &  &X   &  &  &  &  \\
 \end{tabular}
 \end{adjustbox}
 \caption{Requirements vs Modules Trace Matrix}
