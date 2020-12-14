@@ -1,18 +1,9 @@
 \documentclass[12pt, titlepage]{article}
 
-
-
 \usepackage{booktabs}
 \usepackage{tabularx}
 \usepackage{hyperref}
-\hypersetup{
-    colorlinks,
-    citecolor=black,
-    filecolor=black,
-    linkcolor=red,
-    urlcolor=blue
-}
-\usepackage[round]{natbib}
+
 
 \usepackage{amsmath, mathtools}
 \usepackage{amsfonts}
@@ -32,6 +23,15 @@
 \usepackage{caption}
 \usepackage{enumitem}
 \usepackage{adjustbox}
+
+\hypersetup{
+    colorlinks,
+    citecolor=black,
+    filecolor=black,
+    linkcolor=red,
+    urlcolor=blue
+}
+\usepackage[square,numbers]{natbib}
 
 \input{../Comments}
 \input{../Common}
@@ -85,11 +85,11 @@ apply to this document as well.
 
 \pagenumbering{arabic}
 
-This document provides the summary of the Verification and Validation of the 
+This document provides a summary of the Verification and Validation of the 
 \progname{} software. 
 
 Sections 3 and 4 summarize the results of the functional and non-functional
-requirements respectively. Subsequent sections summarizes the test results
+requirements respectively. Subsequent sections summarize the test results
 in detail.
 
 \section{Functional Requirements Evaluation}
@@ -134,7 +134,7 @@ for checking the physical constraints on the input.
 
 \paragraph{Linting} - Linting check of the  \progname{} software against 
 the PEP-8  standards did not reveal any significant issues. Minor issues such 
-a white-space before `:', or long line lengths were identified. These are 
+as whitespace before `:', or long line lengths were identified. These are 
 negligible, and hence overall the Linting test was successful. The test results 
 and the corresponding artifacts can be found here,
 
@@ -151,8 +151,8 @@ The test results and the corresponding artifacts can be found here,
 \subsection{Security}
 
 \paragraph{Memory Leak Check} - Valgrind analysis of the \progname{} software indicated
-that there is about 576 Bytes confirmed leak, and 148 MB possible leak. However this 
-data is inconclusive, as the leak maybe in Python itself.
+that there are about 576 Bytes confirmed leak, and 148 MB possible leak. However, this 
+data is inconclusive, as the leak may be in Python itself.
 
 The test results and the corresponding artifacts can be found here,
 
@@ -167,7 +167,7 @@ input constraints.
 
 \subsection{Verifiability}
 
-\paragraph{Tracing} - All the functional and non functional requirements have at-least 
+\paragraph{Tracing} - All the functional and non-functional requirements have at least 
 one test case in the VnV plan and report.
 
 \paragraph{Statement Coverage} - Automated testing proved that 100\% statement
@@ -226,13 +226,13 @@ The Unit test case, TC-PD-14, passed successfully. The results are found here,
 
 \section{Changes Due to Testing}
 
-The following bugs were caught during verification and were addressed,
+The following bugs were caught during the verification and were addressed,
 
 \begin{itemize}
 
 \item The maximum physical constraint of the  Step Time (${t_{\text{step}}}$) was 
 updated to always be less than the Simulation Time (${t_{\text{sim}}}$). This way
-the User is free to choose the step size.
+the user is free to choose the step size.
 
 \end {itemize}
 		
@@ -261,8 +261,7 @@ OutputFormat.py    & 100\%
 \end{tabular}
 \end{table}
 
-\bibliographystyle{plainnat}
-
+\bibliographystyle{abbrvnat}
 \bibliography{../../refs/References}
 
 \end{document}
