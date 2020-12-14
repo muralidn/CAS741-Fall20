@@ -89,9 +89,9 @@ $L⁻¹[F(s)]$ & Inverse Laplace Transform of a function & --
 \\
 ${P_{\text{s}}}$ & Proportional control in the frequency domain & --
 \\
-${R_{\text{s}}}$ & Set Point in the frequency domain & --
+${R_{\text{s}}}$ & Set-Point in the frequency domain & --
 \\
-${r_{\text{t}}}$ & Set Point & --
+${r_{\text{t}}}$ & Set-Point & --
 \\
 $RelTol$ & Relative Tolerance & --
 \\
@@ -169,11 +169,11 @@ The purpose of this document is to capture all the necessary  information includ
 
 \subsection{Scope of Requirements}
 \label{Sec:ReqsScope}
-The scope of the requirements includes a PD Control Loop  with three subsystems namely a  PD Controller , a Summing Point , and a Power Plant . Only  the Proportional and Derivative controllers are used here;  the Integral controller is beyond the scope of this software. Additionally, this software is intended to aid with the manual  tuning of the PD Controller.
+The scope of the requirements includes a PD Control Loop  with three subsystems namely a  PD Controller, a Summing Point, and a Power Plant. Only  the Proportional and Derivative controllers are used in this sofware;  the Integral controller is beyond the scope of this project. Additionally, this software is intended to aid with the manual  tuning of the PD Controller.
 
 \subsection{Characteristics of Intended Reader}
 \label{Sec:ReaderChars}
-Reviewers of this documentation should have an understanding of control systems (control theory and controllers) at a fourth year undergraduate level and engineering mathematics at a second year undergraduate level. The users of PD Controller can have a lower level of expertise, as explained in \hyperref[Sec:UserChars]{Section: User Characteristics}.
+Reviewers of this documentation should have an understanding of control systems (control theory and controllers) at the fourth-year undergraduate level and engineering mathematics at a second-year undergraduate level. The users of PD Controller can have a lower level of expertise, as explained in \hyperref[Sec:UserChars]{Section: User Characteristics}.
 
 \subsection{Organization of Document}
 \label{Sec:DocOrg}
@@ -213,7 +213,7 @@ PD Controller  is self-contained. The only external interaction is   with the us
 \end{itemize}
 \subsection{User Characteristics}
 \label{Sec:UserChars}
-The end user of  PD Controller  is expected to have taken a course on Control Systems at an  undergraduate level.
+The end-user of  PD Controller  is expected to have taken a course on Control Systems at an  undergraduate level.
 
 \subsection{System Constraints}
 \label{Sec:SysConstraints}
@@ -232,26 +232,26 @@ A system is needed to provide a model of a PD Controller  that can be used for t
 This subsection provides a list of terms that are used in the subsequent sections and their meaning, with the purpose of reducing ambiguity and making it easier to correctly understand the requirements.
 
 \begin{itemize}
-\item{PD Control Loop: Closed loop control system with PD Controller, Summing Point and Power Plant.}
+\item{PD Control Loop: Closed-Loop control system with PD Controller, Summing Point and Power Plant.}
 \item{PD Controller: Proportional-Derivative Controller.}
 \item{Summing Point: Control block where the difference between the Set-Point and the Process Variable is computed.}
 \item{Power Plant: A first order system to be controlled.}
-\item{First Order System: A system whose input-output relationship is denoted by a first order differential equation.}
-\item{Process Error: Input to the PID controller. Process Error is the difference between the Set Point and the Process Variable.}
+\item{First Order System: A system whose input-output relationship is denoted by a first-order differential equation.}
+\item{Process Error: Input to the PID controller. Process Error is the difference between the Set-Point and the Process Variable.}
 \item{Simulation Time: Total execution time of the PD simulation.}
 \item{Process Variable: The output value from the power plant.}
-\item{Set Point: The desired value that the control system must reach. This also knows as reference variable.}
+\item{Set-Point: The desired value that the control system must reach. This also knows as the reference variable.}
 \item{Proportional Gain: Gain constant of the proportional controller.}
 \item{Derivative Gain: Gain constant of the derivative controller.}
-\item{Frequency Domain: The analysis of mathematical functions with respect to frequency, instead of time.}
+\item{Frequency Domain: The analysis of mathematical functions in terms of frequency, instead of time.}
 \item{Laplace transform: An integral transform that converts a function of a real variable t (often time) to a function of a complex variable s (complex frequency).}
 \item{Control Variable: The Control Variable is the output of the PD controller.}
 \item{Step Time: Simulation step time.}
 \item{Absolute Tolerance: Absolute tolerance for the integrator.}
 \item{Relative Tolerance: Relative tolerance for the integrator.}
-\item{DC Gain: DC Gain is the ratio of the steady state output to the input signal.}
+\item{DC Gain: DC Gain is the ratio of the steady-state output to the input signal.}
 \item{Time Constant: Time Constant is a measure of the response of a First Order System to a step input.}
-\item{Transfer Function: Transfer Function of a system is the ratio of the output to the inputfunctions in the Frequency Domain.}
+\item{Transfer Function: The Transfer Function of a system is the ratio of the output to the input functions in the Frequency Domain.}
 \end{itemize}
 \subsubsection{Physical System Description}
 \label{Sec:PhysSyst}
@@ -264,14 +264,14 @@ The physical system of PD Controller, as shown in \hyperref[Figure:pidSysDiagram
 \end{itemize}
 \begin{figure}
 \begin{center}
-\includegraphics[width=0.6\textwidth]{../../../datafiles/PIDController/Fig_PDController.png}
+\includegraphics[width=0.7\textwidth]{../../../datafiles/PIDController/Fig_PDController.png}
 \caption{The physical system}
 \label{Figure:pidSysDiagram}
 \end{center}
 \end{figure}
 \subsubsection{Goal Statements}
 \label{Sec:GoalStmt}
-Given Set Point, Simulation Time, Proportional Gain, Derivative Gain, and Step Time, the goal statements are:
+Given Set-Point, Simulation Time, Proportional Gain, Derivative Gain, and Step Time, the goal statements are:
 
 \begin{itemize}
 \item[Process-Variable:\phantomsection\label{processVariable}]{Calculate the output of the Power Plant ( Process Variable ) over time.}
@@ -287,13 +287,13 @@ This section simplifies the original problem and helps in developing the theoret
 \begin{itemize}
 \item[Power plant:\phantomsection\label{pwrPlant}]{The Power Plant and the Sensor are coupled as a single unit. (RefBy: \hyperref[pwrPlantTxFnx]{A: Transfer Function} and \hyperref[dcGainTimeConst]{A: Power Plant Parameters}.)}
 \item[Decoupled equation:\phantomsection\label{decoupled}]{The decoupled form of the PD Controller equation used in this simulation. (RefBy: \hyperref[DD:ddCtrlVar]{DD: ddCtrlVar}.)}
-\item[Set-Point:\phantomsection\label{setPoint}]{The Set Point is a constant throughout the simulation. (RefBy: \hyperref[DD:ddProcessError]{DD: ddProcessError} and \hyperref[IM:pdEquationIM]{IM: pdEquationIM}.)}
+\item[Set-Point:\phantomsection\label{setPoint}]{The Set-Point is constant throughout the simulation. (RefBy: \hyperref[DD:ddProcessError]{DD: ddProcessError} and \hyperref[IM:pdEquationIM]{IM: pdEquationIM}.)}
 \item[External disturbance:\phantomsection\label{externalDistub}]{There are no external disturbances to the Power Plant during the simulation. (RefBy: \hyperref[GD:gdPowerPlant]{GD: gdPowerPlant}.)}
 \item[Initial Value:\phantomsection\label{initialValue}]{The initial value of the Process Variable is assumed to be zero. (RefBy: \hyperref[DD:ddProcessError]{DD: ddProcessError}.)}
 \item[Parallel Equation:\phantomsection\label{parallelEq}]{The Parallel form of the equation is used for the PD Controller. (RefBy: \hyperref[DD:ddCtrlVar]{DD: ddCtrlVar}.)}
 \item[Unfiltered Derivative:\phantomsection\label{unfilteredDerivative}]{A pure derivative function is used for this simulation; there are no filters applied. (RefBy: \hyperref[DD:ddDerivCtrl]{DD: ddDerivCtrl}.)}
-\item[Transfer Function:\phantomsection\label{pwrPlantTxFnx}]{The combined Power Plant and Sensor ( from  \hyperref[pwrPlant]{A: Power plant}  ) are characterized by a First Order  System. (RefBy: \hyperref[TM:tmFOSystem]{TM: tmFOSystem}, \hyperref[likeChgIC]{LC: Second Order Power Plant}, and \hyperref[dcGainTimeConst]{A: Power Plant Parameters}.)}
-\item[Power Plant Parameters:\phantomsection\label{dcGainTimeConst}]{The DC Gain and Time Constant of the First Order System ( from \hyperref[pwrPlant]{A: Power plant} and \hyperref[pwrPlantTxFnx]{A: Transfer Function} ) are assumed to be 1, and 2 seconds respectively. There are no physical signifiance to the values chosen. (RefBy: \hyperref[likeChgPP]{LC: DC Gain and Time Constant} and \hyperref[GD:gdPowerPlant]{GD: gdPowerPlant}.)}
+\item[Transfer Function:\phantomsection\label{pwrPlantTxFnx}]{The combined Power Plant and Sensor ( from  \hyperref[pwrPlant]{A: Power plant}  ) are characterized by a First Order  System. (RefBy: \hyperref[TM:tmFOSystem]{TM: tmFOSystem}, \hyperref[likeChgIC]{LC: Second-Order Power Plant}, and \hyperref[dcGainTimeConst]{A: Power Plant Parameters}.)}
+\item[Power Plant Parameters:\phantomsection\label{dcGainTimeConst}]{The DC Gain and Time Constant of the First Order System ( from \hyperref[pwrPlant]{A: Power plant} and \hyperref[pwrPlantTxFnx]{A: Transfer Function} ) are assumed to be 1, and 2 seconds respectively. There is no physical significance to the values chosen. (RefBy: \hyperref[likeChgPP]{LC: DC Gain and Time Constant} and \hyperref[GD:gdPowerPlant]{GD: gdPowerPlant}.)}
 \end{itemize}
 \subsubsection{Theoretical Models}
 \label{Sec:TMs}
@@ -384,7 +384,7 @@ Description & \begin{symbDescription}
               \item{$s$ is the Complex frequency-domain parameter (Unitless)}
               \end{symbDescription}
 \\ \midrule \\
-Notes & The  Transfer Function  of a  First Order System is characterised by this equation ( from \hyperref[pwrPlantTxFnx]{A: Transfer Function} ).
+Notes & The  Transfer Function  of a  First Order System is characterized by this equation ( from \hyperref[pwrPlantTxFnx]{A: Transfer Function} ).
         
 \\ \midrule \\
 Source & \cite{electrical4UWiki}
@@ -407,7 +407,7 @@ This section collects the laws and equations that will be used to build the inst
 \phantomsection 
 \label{GD:gdPowerPlant}
 \\ \midrule \\
-Label & Transfer function of the Power Plant.
+Label & The Transfer Function of the Power Plant.
         
 \\ \midrule \\
 Equation & \begin{displaymath}
@@ -418,7 +418,7 @@ Description & \begin{symbDescription}
               \item{$s$ is the Complex frequency-domain parameter (Unitless)}
               \end{symbDescription}
 \\ \midrule \\
-Notes & The  Transfer Function of the First Order System is reduced to this equation by substituting the DC Gain ( ${K_{\text{DC}}}$ ) to 1, and the Time Constant ( $𝛕$ ) to 2 seconds ( from  \hyperref[TM:tmFOSystem]{TM: tmFOSystem} and \hyperref[dcGainTimeConst]{A: Power Plant Parameters} ). The equation is converted to frequency domain by applying the Laplace transform ( from \hyperref[TM:laplaceTransform]{TM: laplaceTransform} ). Additionally, there are no external disturbances to the power plant ( from  \hyperref[externalDistub]{A: External disturbance} ).
+Notes & The  Transfer Function of the First Order System is reduced to this equation by substituting the DC Gain ( ${K_{\text{DC}}}$ ) to 1, and the Time Constant ( $𝛕$ ) to 2 seconds ( from  \hyperref[TM:tmFOSystem]{TM: tmFOSystem} and \hyperref[dcGainTimeConst]{A: Power Plant Parameters} ). The equation is converted to the frequency domain by applying the Laplace transform ( from \hyperref[TM:laplaceTransform]{TM: laplaceTransform} ). Additionally, there are no external disturbances to the power plant ( from  \hyperref[externalDistub]{A: External disturbance} ).
         
 \\ \midrule \\
 Source & \cite{pidWiki} and \cite{electrical4UWiki}
@@ -456,11 +456,11 @@ Equation & \begin{displaymath}
 \\ \midrule \\
 Description & \begin{symbDescription}
               \item{${E_{\text{s}}}$ is the Process Error in the frequency domain (Unitless)}
-              \item{${R_{\text{s}}}$ is the Set Point in the frequency domain (Unitless)}
+              \item{${R_{\text{s}}}$ is the Set-Point in the frequency domain (Unitless)}
               \item{${Y_{\text{s}}}$ is the Process Variable in the frequency domain (Unitless)}
               \end{symbDescription}
 \\ \midrule \\
-Notes & Process Error is the difference between the Set-Point and  Process Variable. The equation is converted to frequency domain by applying the Laplace transform ( from \hyperref[TM:laplaceTransform]{TM: laplaceTransform} ). The Set-Point is assumed to be constant throughout the simulation ( from  \hyperref[setPoint]{A: Set-Point} ). The initial value of the Process Variable if assumed to be zero ( from  \hyperref[initialValue]{A: Initial Value} ).
+Notes & The Process Error is the difference between the Set-Point and  Process Variable. The equation is converted to the frequency domain by applying the Laplace transform ( from \hyperref[TM:laplaceTransform]{TM: laplaceTransform} ). The Set-Point is assumed to be constant throughout the simulation ( from  \hyperref[setPoint]{A: Set-Point} ). The initial value of the Process Variable is assumed to be zero ( from  \hyperref[initialValue]{A: Initial Value} ).
         
 \\ \midrule \\
 Source & \cite{johnson2008}
@@ -499,7 +499,7 @@ Description & \begin{symbDescription}
               \item{${E_{\text{s}}}$ is the Process Error in the frequency domain (Unitless)}
               \end{symbDescription}
 \\ \midrule \\
-Notes & Proportional controller is the product of the Proportional Gain and the Process Error ( from  \hyperref[DD:ddProcessError]{DD: ddProcessError} ) The equation is converted to frequency domain by applying the Laplace transform ( from \hyperref[TM:laplaceTransform]{TM: laplaceTransform} ).
+Notes & The Proportional Controller is the product of the Proportional Gain and the Process Error ( from  \hyperref[DD:ddProcessError]{DD: ddProcessError} ) The equation is converted to the frequency domain by applying the Laplace transform ( from \hyperref[TM:laplaceTransform]{TM: laplaceTransform} ).
         
 \\ \midrule \\
 Source & \cite{johnson2008}
@@ -539,7 +539,7 @@ Description & \begin{symbDescription}
               \item{$s$ is the Complex frequency-domain parameter (Unitless)}
               \end{symbDescription}
 \\ \midrule \\
-Notes & Derivative controller is the product of the Derivative Gain and the differential of the Process Error ( from  \hyperref[DD:ddProcessError]{DD: ddProcessError} ) The equation is converted to frequency domain by applying the Laplace transform ( from \hyperref[TM:laplaceTransform]{TM: laplaceTransform} ) A pure form of the Derivative controller is used in this application ( from \hyperref[unfilteredDerivative]{A: Unfiltered Derivative} ).
+Notes & The Derivative Controller is the product of the Derivative Gain and the differential of the Process Error ( from  \hyperref[DD:ddProcessError]{DD: ddProcessError} ) The equation is converted to the frequency domain by applying the Laplace transform ( from \hyperref[TM:laplaceTransform]{TM: laplaceTransform} ) A pure form of the Derivative controller is used in this application ( from \hyperref[unfilteredDerivative]{A: Unfiltered Derivative} ).
         
 \\ \midrule \\
 Source & \cite{johnson2008}
@@ -580,7 +580,7 @@ Description & \begin{symbDescription}
               \item{$s$ is the Complex frequency-domain parameter (Unitless)}
               \end{symbDescription}
 \\ \midrule \\
-Notes & The control variable is the output of the controller. In this case, it is the sum of the Proportional ( from \hyperref[DD:ddPropCtrl]{DD: ddPropCtrl} ) and Derivative ( from  \hyperref[DD:ddDerivCtrl]{DD: ddDerivCtrl} ) controllers The parallel ( from \hyperref[parallelEq]{A: Parallel Equation} ) and de-coupled ( from \hyperref[decoupled]{A: Decoupled equation} ) form of the PD equation is used in this document.
+Notes & The Control Variable is the output of the controller. In this case, it is the sum of the Proportional ( from \hyperref[DD:ddPropCtrl]{DD: ddPropCtrl} ) and Derivative ( from  \hyperref[DD:ddDerivCtrl]{DD: ddDerivCtrl} ) controllers The parallel ( from \hyperref[parallelEq]{A: Parallel Equation} ) and de-coupled ( from \hyperref[decoupled]{A: Decoupled equation} ) form of the PD equation is used in this document.
         
 \\ \midrule \\
 Source & \cite{johnson2008}
@@ -636,7 +636,7 @@ Description & \begin{symbDescription}
               \item{$t$ is the time (${\text{s}}$)}
               \item{${y_{\text{t}}}$ is the Process Variable (Unitless)}
               \item{${K_{\text{p}}}$ is the Proportional Gain (Unitless)}
-              \item{${r_{\text{t}}}$ is the Set Point (Unitless)}
+              \item{${r_{\text{t}}}$ is the Set-Point (Unitless)}
               \end{symbDescription}
 \\ \midrule \\
 Source & \cite{abbasi2015} and \cite{johnson2008}
@@ -717,7 +717,7 @@ ${K_{\text{d}}}$ & Derivative Gain & --
 \\
 ${K_{\text{p}}}$ & Proportional Gain & --
 \\
-${r_{\text{t}}}$ & Set Point & --
+${r_{\text{t}}}$ & Set-Point & --
 \\
 ${t_{\text{sim}}}$ & Simulation Time & ${\text{s}}$
 \\
@@ -742,8 +742,8 @@ This section provides the non-functional requirements, the qualities that the so
 This section lists the likely changes to be made to the software.
 
 \begin{itemize}
-\item[Second Order Power Plant:\phantomsection\label{likeChgIC}]{The Power Plant maybe changed into a second order system ( from  \hyperref[pwrPlantTxFnx]{A: Transfer Function} ).}
-\item[DC Gain and Time Constant:\phantomsection\label{likeChgPP}]{The DC Gain and Time Constant maybe changed to be supplied by the User ( from  \hyperref[dcGainTimeConst]{A: Power Plant Parameters} ).}
+\item[Second-Order Power Plant:\phantomsection\label{likeChgIC}]{The Power Plant may be changed into a second-order system ( from  \hyperref[pwrPlantTxFnx]{A: Transfer Function} ).}
+\item[DC Gain and Time Constant:\phantomsection\label{likeChgPP}]{The DC Gain and Time Constant may be changed to be supplied by the user ( from  \hyperref[dcGainTimeConst]{A: Power Plant Parameters} ).}
 \end{itemize}
 \section{Traceability Matrices and Graphs}
 \label{Sec:TraceMatrices}
@@ -817,7 +817,7 @@ The purpose of the traceability matrices is to provide easy references on what h
 \\
 \hyperref[verifiability]{NFR: Verifiable} &  &  &  &  &  &  &  &  & 
 \\
-\hyperref[likeChgIC]{LC: Second Order Power Plant} &  &  &  &  &  &  &  & X & 
+\hyperref[likeChgIC]{LC: Second-Order Power Plant} &  &  &  &  &  &  &  & X & 
 \\
 \hyperref[likeChgPP]{LC: DC Gain and Time Constant} &  &  &  &  &  &  &  &  & X
 \\

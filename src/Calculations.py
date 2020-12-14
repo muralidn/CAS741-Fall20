@@ -6,7 +6,7 @@ import scipy.integrate
 import Constants
 
 ## \brief Calculates Process Variable: The output value from the power plant
-# \param r_t Set Point: The desired value that the control system must reach. This also knows as reference variable
+# \param r_t Set-Point: The desired value that the control system must reach. This also knows as the reference variable
 # \param K_p Proportional Gain: Gain constant of the proportional controller
 # \param K_d Derivative Gain: Gain constant of the derivative controller
 # \param t_sim Simulation Time: Total execution time of the PD simulation (s)

@@ -1,4 +1,4 @@
-# Set Point
+# Set-Point
 20
 # Derivative Gain
 15

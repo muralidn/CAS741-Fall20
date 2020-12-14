@@ -76,9 +76,10 @@ def run(test_case, tolerance=0.001):
         stdout, stderr = p.communicate(timeout=10)
         if (test_lookup_table[test_case]["Error"] == "Y"):
             err = stderr.decode("utf-8")
-            err = err.split("\r\n")
-            err = [i.lstrip() for i in err]
             pprint.pprint(err)
+            err = err.splitlines()
+            err = [i.lstrip() for i in err]
+            #pprint.pprint(err)
             assert ("InputError" in err[-2])
         else:
             actual_output = parse_output(test_case)

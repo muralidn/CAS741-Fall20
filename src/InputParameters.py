@@ -3,7 +3,7 @@
 # \brief Provides the function for reading inputs and the function for checking the physical constraints on the input
 ## \brief Reads input from a file with the given file name
 # \param filename name of the input file
-# \return Set Point: The desired value that the control system must reach. This also knows as reference variable
+# \return Set-Point: The desired value that the control system must reach. This also knows as the reference variable
 # \return Derivative Gain: Gain constant of the derivative controller
 # \return Proportional Gain: Gain constant of the proportional controller
 # \return Step Time: Simulation step time (s)
@@ -57,7 +57,7 @@ def get_input(filename):
     return r_t, K_d, K_p, t_step, t_sim
 
 ## \brief Verifies that input values satisfy the physical constraints
-# \param r_t Set Point: The desired value that the control system must reach. This also knows as reference variable
+# \param r_t Set-Point: The desired value that the control system must reach. This also knows as the reference variable
 # \param K_d Derivative Gain: Gain constant of the derivative controller
 # \param K_p Proportional Gain: Gain constant of the proportional controller
 # \param t_step Step Time: Simulation step time (s)

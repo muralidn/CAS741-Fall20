@@ -1,4 +1,4 @@
-# Set Point
+# Set-Point
 1.0
 # Derivative Gain
 1.0
