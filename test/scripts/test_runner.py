@@ -15,7 +15,7 @@ if platform == "linux" or platform == "linux2" or platform == "darwin":
     PD_SCRIPT_PATH = r"../../src/Control.py"
     PD_OUTPUT_FILE_PATH = r"output.txt"
     PD_LOG_FILE_PATH = r"log.txt"
-    PYTHON_BINARY = r"python"
+    PYTHON_BINARY = r"python3"
 else:
     # Windows...
     INPUT_FILES_ROOT = r"..\data\inputs"
@@ -23,7 +23,7 @@ else:
     PD_SCRIPT_PATH = r"..\..\src\Control.py"
     PD_OUTPUT_FILE_PATH = r"output.txt"
     PD_LOG_FILE_PATH = r"log.txt"
-    PYTHON_BINARY = r"python3"
+    PYTHON_BINARY = r"python"
 
 test_lookup_table = dict()
 
