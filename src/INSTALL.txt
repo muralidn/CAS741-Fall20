@@ -1,0 +1,55 @@
+This document contains the prerequisite software necessary for the execution
+of the PD Controller software and its test procedures.
+
+1. Python3
+-------------    
+    Name: Python 3.6 or greater
+    URL: https://www.python.org/downloads/
+    Installation instructions: Install with the MSI package (Windows), or with
+    package managers (Linux).
+    
+2. PIP (optional)
+-------------
+    PIP is the package manager for Python. PIP is usually packaged with Python,
+    if not it is recommended to be installed.
+    
+    Name: PIP, the latest version
+    URL: https://pypi.org/project/pip/
+    Installation instructions: https://pip.pypa.io/en/stable/installing/
+    
+3. scipy
+-------------
+    Name: Scipy latest version
+    URL: https://www.scipy.org/
+    Installation instructions: "pip install scipy" 
+    
+    Note: Scipy installs another package called numpy. The current version
+    of numpy, 1.19.4 is having issues when executing on Windows. The following
+    error message is observed,
+    
+('C:\\Users\\nmuralidn\\AppData\\Local\\Programs\\Python\\Python39\\lib\\site-packages\\numpy\\__init__.py') fails to pass a sanity check due to a bug in the windows runtime. See this issue for more information: https://tinyurl.com/y3dm3h86
+
+    The solution for this is to revert the numpy installation. Run the 
+    following command to rollback numpy,
+    "pip install numpy==1.19.3"
+    
+4. pytest
+-------------
+    Name: PyTest latest version
+    URL: https://docs.pytest.org/en/latest/
+    Installation instructions: "pip install pytest"
+    
+5. pytest-html
+-------------
+    Name: pytest-html latest version
+    URL: https://github.com/pytest-dev/pytest-html
+    Installation instructions: "pip install pytest-html"
+    
+6. pytest-cov
+-------------
+    Name: pytest-cov latest version
+    URL: https://github.com/pytest-dev/pytest-cov
+    Installation instructions: "pip install pytest-cov"
+
+
+    
