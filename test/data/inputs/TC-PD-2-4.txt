@@ -1,0 +1,10 @@
+# Set Point
+20
+# Derivative Gain
+1
+# Proportional Gain
+10
+# Step Time (s)
+1.0e-2
+# Simulation Time (s)
+3
