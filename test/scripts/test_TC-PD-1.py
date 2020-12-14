@@ -5,7 +5,7 @@ import test_runner
 test_runner.build_output_dict(r'TC-PD-1.csv')
     
 def test_PD_1_1():
-    test_runner.run("TC-PD-1-1", tolerance=0.001)
+    test_runner.run("TC-PD-1-1", tolerance=0.05)
 
 def test_PD_1_2():
     test_runner.run("TC-PD-1-2")

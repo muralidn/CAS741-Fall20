@@ -5,11 +5,13 @@ import pprint
 
 import os
 import subprocess
+import shutil
 
 INPUT_FILES_ROOT = r"..\data\inputs"
 OUTPUTS_RESULTS_ROOT = r"..\data\outputs"
 PD_SCRIPT_PATH = r"..\..\src\Control.py"
 PD_OUTPUT_FILE_PATH = r"output.txt"
+PD_LOG_FILE_PATH = r"log.txt"
 
 test_lookup_table = dict()
 
@@ -26,11 +28,12 @@ def build_output_dict (output_file_path):
 
 #pprint.pprint(test_lookup_table)
 
-def parse_output():
+def parse_output(test_case):
     output_file = open (PD_OUTPUT_FILE_PATH)
     output_data = output_file.read()
     output_list = output_data.split(",")
     output_file.close()
+    shutil.copyfile(PD_OUTPUT_FILE_PATH, "output_{}.txt".format(test_case))
     return float(output_list[-1].replace("]",""))
 
 
@@ -39,9 +42,13 @@ def run(test_case, tolerance=0.001):
     if os.path.exists(PD_OUTPUT_FILE_PATH):
         os.remove(PD_OUTPUT_FILE_PATH)
 
+    if os.path.exists(PD_LOG_FILE_PATH):
+        os.remove(PD_LOG_FILE_PATH)
+
     ip_file = os.path.normpath(os.path.join(INPUT_FILES_ROOT, test_case + ".txt" ))
     ip_contents = ""
     with open (ip_file) as ip_file_obj:
+        pprint.pprint(os.path.join(INPUT_FILES_ROOT, test_case + ".txt" ))
         ip_contents = ip_file_obj.readlines()
         ip_contents = " ".join(ip_contents)
         ip_contents = ip_contents.replace("\n","")
@@ -62,7 +69,7 @@ def run(test_case, tolerance=0.001):
             pprint.pprint(err)
             assert ("InputError" in err[-2])
         else:
-            actual_output = parse_output()
+            actual_output = parse_output(test_case)
             expected_output = float(test_lookup_table[test_case]["yt"])
             delta = abs(expected_output - actual_output)
             pprint.pprint("Expected Output: {}".format(expected_output))
@@ -70,6 +77,7 @@ def run(test_case, tolerance=0.001):
             pprint.pprint("Relative Error: +/- {}".format(tolerance))
             assert (delta < tolerance)
 
+        shutil.copyfile(PD_LOG_FILE_PATH, "log_{}.txt".format(test_case))
     except subprocess.TimeoutExpired:
         print("Process timedout")
         p.kill()
