@@ -1,5 +1,13 @@
 import sys
-sys.path.append(r"..\\..\\src\\")
+
+
+if sys.platform == "linux" or sys.platform == "linux2" or sys.platform == "darwin":
+    # linux
+    sys.path.append(r"../../src/")
+else:
+    # Windows...
+    sys.path.append(r"..\\..\\src\\")
+
 
 import Calculations
 

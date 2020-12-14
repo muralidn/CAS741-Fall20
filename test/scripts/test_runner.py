@@ -6,12 +6,22 @@ import pprint
 import os
 import subprocess
 import shutil
+from sys import platform
 
-INPUT_FILES_ROOT = r"..\data\inputs"
-OUTPUTS_RESULTS_ROOT = r"..\data\outputs"
-PD_SCRIPT_PATH = r"..\..\src\Control.py"
-PD_OUTPUT_FILE_PATH = r"output.txt"
-PD_LOG_FILE_PATH = r"log.txt"
+if platform == "linux" or platform == "linux2" or platform == "darwin":
+    # linux
+    INPUT_FILES_ROOT = r"../data/inputs"
+    OUTPUTS_RESULTS_ROOT = r"../data/outputs"
+    PD_SCRIPT_PATH = r"../../src/Control.py"
+    PD_OUTPUT_FILE_PATH = r"output.txt"
+    PD_LOG_FILE_PATH = r"log.txt"
+else:
+    # Windows...
+    INPUT_FILES_ROOT = r"..\data\inputs"
+    OUTPUTS_RESULTS_ROOT = r"..\data\outputs"
+    PD_SCRIPT_PATH = r"..\..\src\Control.py"
+    PD_OUTPUT_FILE_PATH = r"output.txt"
+    PD_LOG_FILE_PATH = r"log.txt"
 
 test_lookup_table = dict()
 
